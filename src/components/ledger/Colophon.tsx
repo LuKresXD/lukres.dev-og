@@ -12,7 +12,7 @@ export default function Colophon() {
             <div className="grid grid-cols-12 gap-x-6 gap-y-8 py-12">
                 <Reveal className="col-span-12 md:col-span-7">
                     <p className="font-display text-2xl uppercase tracking-tight text-paper leading-none">
-                        Luka <span className="text-faint">· AKA LUKRES</span>
+                        Luka Krestinin <span className="text-faint">· AKA LUKRES</span>
                     </p>
                     <p className="text-mut mt-4 max-w-[30rem] leading-relaxed">
                         The fastest way to reach me is Telegram or email. If you want proof for any

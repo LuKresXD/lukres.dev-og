@@ -13,7 +13,7 @@ export default function Home() {
     return (
         <div className="ledger bg-ink text-paper font-sans min-h-[100dvh] selection:bg-phos selection:text-ink">
             <Head>
-                <title>LuKres.dev · Luka</title>
+                <title>Luka Krestinin · LuKres.dev</title>
             </Head>
             <Frame />
             <main id="main">
