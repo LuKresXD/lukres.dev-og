@@ -27,7 +27,7 @@ export default function Hero() {
                 >
                     Luka
                     <br />
-                    <span className="text-outline">Kresoja</span>
+                    <span className="text-outline">LuKres</span>
                 </motion.h1>
 
                 <motion.p {...enter(0.16)} className="mt-6 max-w-[38rem] text-lg md:text-xl text-mut leading-relaxed">
