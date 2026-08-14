@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 02 · Proof</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,500;0,600;1,300;1,400&family=Karla:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --board: #191e1b; --board2: #141815;
+    --chalk: #edeae1; --faint: #7b847d; --line: #2a312c;
+    --ochre: #d9a441; --redchalk: #b4543e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background:
+      radial-gradient(120% 90% at 50% 0%, var(--board) 0%, var(--board2) 100%);
+    color: var(--chalk);
+    font-family: "Karla", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--ochre); outline-offset: 3px; }
+  .frame { max-width: 1080px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 30px; font-size: 13px; letter-spacing: 0.02em; color: var(--faint);
+  }
+  header .who { font-family: "Spectral", serif; font-style: italic; font-size: 15px; color: var(--chalk); }
+  nav { display: flex; gap: 24px; }
+  nav a:hover { color: var(--chalk); }
+
+  /* hero — a claim, stated like mathematics */
+  .hero { padding: clamp(72px, 16vh, 160px) 0 0; }
+  .hero .no { font-size: 13px; color: var(--ochre); letter-spacing: 0.12em; margin-bottom: 18px; }
+  .hero h1 {
+    font-family: "Spectral", serif; font-weight: 300;
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    line-height: 1.12; letter-spacing: -0.01em; max-width: 22ch;
+  }
+  .hero h1 i { font-style: italic; font-weight: 400; }
+  .hero .underline {
+    width: min(360px, 60%); height: 14px; margin-top: 14px;
+    color: var(--ochre);
+  }
+  .hero .sub { margin-top: 28px; max-width: 52ch; color: var(--faint); font-size: 15.5px; line-height: 1.7; }
+  .hero .sub b { color: var(--chalk); font-weight: 500; }
+
+  /* work — propositions with proofs */
+  .work { margin-top: clamp(80px, 16vh, 170px); }
+  .work > p.head { font-size: 12px; letter-spacing: 0.14em; color: var(--faint); text-transform: uppercase; margin-bottom: 8px; }
+  .prop { padding: 34px 0; border-top: 1px solid var(--line); }
+  .prop .label { font-family: "Spectral", serif; font-style: italic; font-size: 15px; color: var(--ochre); }
+  .prop h2 {
+    font-family: "Spectral", serif; font-weight: 500;
+    font-size: clamp(1.5rem, 3.4vw, 2.3rem); margin: 6px 0 10px;
+  }
+  .prop .proof { color: var(--faint); font-size: 15px; line-height: 1.7; max-width: 58ch; }
+  .prop .proof::before { content: "Proof. "; font-family: "Spectral", serif; font-style: italic; color: var(--chalk); }
+  .qed { display: block; text-align: right; color: var(--chalk); font-size: 14px; margin-top: 10px; }
+  .prop:hover .qed { color: var(--ochre); }
+
+  /* contact = the exercise left to the reader */
+  .exercise {
+    margin: clamp(80px, 16vh, 170px) 0 0; padding: 34px 0; border-top: 1px solid var(--line);
+    font-family: "Spectral", serif; font-size: clamp(1.2rem, 2.6vw, 1.7rem); font-weight: 300;
+  }
+  .exercise i { font-style: italic; }
+  .exercise a { border-bottom: 1px solid var(--ochre); color: var(--chalk); }
+  .exercise a:hover { color: var(--ochre); }
+
+  footer { margin: 60px 0 40px; display: flex; justify-content: space-between; font-size: 12.5px; color: var(--faint); flex-wrap: wrap; gap: 10px; }
+  footer a:hover { color: var(--chalk); }
+
+  @media (max-width: 720px) { nav { display: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .qed, nav a, footer a, .exercise a { transition: color 160ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <span class="who">L. Krestinin</span>
+    <nav><a href="#">Work</a><a href="#">Notes</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <p class="no">DEPT. OF SHIPPED MATHEMATICS</p>
+    <h1>Theorem. <i>Anything worth claiming can be shown running.</i></h1>
+    <svg class="underline" viewBox="0 0 360 14" fill="none" aria-hidden="true">
+      <path d="M2 9 C 60 3, 140 13, 210 7 S 330 5, 358 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+    </svg>
+    <p class="sub"><b>Luka Krestinin</b> — CS + Math at the <b>University of Chicago</b>.
+    Co-founder at <b>Veto</b>, quant intern at <b>Teza Technologies</b>.
+    Three exhibits follow; the proofs run in production.</p>
+  </section>
+
+  <section class="work">
+    <p class="head">Exhibits</p>
+
+    <article class="prop">
+      <span class="label">Proposition 1.</span>
+      <h2>Veto</h2>
+      <p class="proof">Co-founded; the product is built end to end and in the hands of users.</p>
+      <span class="qed">∎</span>
+    </article>
+
+    <article class="prop">
+      <span class="label">Proposition 2.</span>
+      <h2>Senthos</h2>
+      <p class="proof">Structured products on prediction-market positions. Judged 1st in the
+      Solana track at SCBC Hackathon 2026 — the event's largest track, $15,000.</p>
+      <span class="qed">∎</span>
+    </article>
+
+    <article class="prop">
+      <span class="label">Proposition 3.</span>
+      <h2>Teza Technologies</h2>
+      <p class="proof">Quant intern, summer 2026. The interesting parts stay on the desk.</p>
+      <span class="qed">∎</span>
+    </article>
+  </section>
+
+  <p class="exercise">The remaining exercise <i>— working together —</i> is left to the reader:
+  <a href="#">write to me</a>.</p>
+
+  <footer>
+    <span>© 2026 Luka Krestinin</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
