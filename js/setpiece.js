@@ -1,73 +1,77 @@
-// The set piece — a form cut from real glass. It spins slowly, leans toward
-// the cursor, and fast movement gives it a push; light refracts and disperses
-// through it. All chroma on the site lives here.
-//
-// Pick phase: several candidate forms share the one glass system.
-// Cycle with ArrowLeft/Right, click/tap the form, or force one via ?form=name.
+// The set piece — the knot. An endless loop that tumbles on its own,
+// can be grabbed and thrown (real angular momentum, damped back to its
+// idle drift), and leans toward the cursor when at rest.
+// Material stays a dial while the finish gets decided: ?mat=name, the
+// pill button, or ArrowUp/Down.
 
 import * as THREE from 'three';
 import { RoomEnvironment } from '../vendor/room-environment.js';
 
-// the mark, same coordinates as assets/mark.svg (0..100, y down)
-const F1_OUTER = [[15, 10], [33, 10], [33, 72], [85, 72], [85, 90], [15, 90]];
-const F1_HOLE  = [[21, 16], [27, 16], [27, 78], [79, 78], [79, 84], [21, 84]];
-const F2_OUTER = [[39, 10], [57, 10], [57, 48], [85, 48], [85, 66], [39, 66]];
-const F2_HOLE  = [[45, 16], [51, 16], [51, 54], [79, 54], [79, 60], [45, 60]];
-
-function toShape(outer, hole) {
-  const m = ([x, y]) => [(x - 50) / 50, (50 - y) / 50];
-  const s = new THREE.Shape();
-  outer.forEach((p, i) => { const [x, y] = m(p); i ? s.lineTo(x, y) : s.moveTo(x, y); });
-  s.closePath();
-  const h = new THREE.Path();
-  hole.forEach((p, i) => { const [x, y] = m(p); i ? h.lineTo(x, y) : h.moveTo(x, y); });
-  h.closePath();
-  s.holes.push(h);
-  return s;
+// procedural surface maps — no asset files, baked once at boot
+function bakeTexture(draw) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#808080';
+  ctx.fillRect(0, 0, 512, 512);
+  draw(ctx);
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  return tex;
 }
 
-function facet(geo) {
-  const g = geo.toNonIndexed();
-  g.computeVertexNormals();
-  geo.dispose();
-  return g;
-}
-
-function twistedBar() {
-  const g = new THREE.BoxGeometry(0.62, 2.1, 0.62, 6, 64, 6);
-  const pos = g.attributes.position;
-  const v = new THREE.Vector3();
-  for (let i = 0; i < pos.count; i++) {
-    v.fromBufferAttribute(pos, i);
-    const a = v.y * 1.15;
-    const c = Math.cos(a), s = Math.sin(a);
-    pos.setXYZ(i, v.x * c - v.z * s, v.y, v.x * s + v.z * c);
+// long directional smears: brushed metal, smeared reflections
+const streaks = bakeTexture((ctx) => {
+  for (let i = 0; i < 900; i++) {
+    const y = Math.random() * 512;
+    const w = 40 + Math.random() * 300;
+    const x = Math.random() * 512 - w / 2;
+    const v = Math.random();
+    ctx.fillStyle = `rgba(${v > 0.5 ? 255 : 0},${v > 0.5 ? 255 : 0},${v > 0.5 ? 255 : 0},${0.028 + Math.random() * 0.05})`;
+    ctx.fillRect(x, y, w, 0.6 + Math.random() * 1.6);
   }
-  g.computeVertexNormals();
-  return g;
-}
+});
 
-function markGroup(material) {
-  const opts = {
-    depth: 0.3, bevelEnabled: true, bevelThickness: 0.05,
-    bevelSize: 0.04, bevelSegments: 3, curveSegments: 2,
-  };
-  const grp = new THREE.Group();
-  for (const [o, h] of [[F1_OUTER, F1_HOLE], [F2_OUTER, F2_HOLE]]) {
-    const geo = new THREE.ExtrudeGeometry(toShape(o, h), opts);
-    geo.translate(0, 0, -opts.depth / 2);
-    grp.add(new THREE.Mesh(geo, material));
+// blotchy mineral grain: polished stone, frost patches
+const grain = bakeTexture((ctx) => {
+  for (let i = 0; i < 2400; i++) {
+    const r = 2 + Math.random() * 26;
+    const v = Math.random() > 0.5 ? 255 : 0;
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+    g.addColorStop(0, `rgba(${v},${v},${v},${0.02 + Math.random() * 0.045})`);
+    g.addColorStop(1, 'rgba(128,128,128,0)');
+    ctx.save();
+    ctx.translate(Math.random() * 512, Math.random() * 512);
+    ctx.fillStyle = g;
+    ctx.fillRect(-r, -r, r * 2, r * 2);
+    ctx.restore();
   }
-  return grp;
-}
+});
+streaks.repeat.set(3, 1);
+grain.repeat.set(2, 2);
 
-const FORMS = [
-  { name: 'knot',     scale: 0.62, build: (m) => new THREE.Mesh(new THREE.TorusKnotGeometry(0.62, 0.24, 240, 40), m) },
-  { name: 'gem',      scale: 0.66, build: (m) => new THREE.Mesh(facet(new THREE.IcosahedronGeometry(0.95, 1)), m) },
-  { name: 'monolith', scale: 0.72, build: (m) => new THREE.Mesh(twistedBar(), m) },
-  { name: 'ring',     scale: 0.66, build: (m) => new THREE.Mesh(new THREE.TorusGeometry(0.76, 0.29, 48, 120), m) },
-  { name: 'coil',     scale: 0.68, build: (m) => new THREE.Mesh(new THREE.TorusKnotGeometry(0.58, 0.17, 280, 28, 1, 3), m) },
-  { name: 'mark',     scale: 0.82, build: (m) => markGroup(m) },
+const MATERIALS = [
+  { name: 'obsidian', make: () => new THREE.MeshPhysicalMaterial({
+      color: 0x0b0b0d, metalness: 0.12, roughness: 0.16, roughnessMap: grain,
+      bumpMap: grain, bumpScale: 0.6, clearcoat: 1, clearcoatRoughness: 0.06,
+      envMapIntensity: 1.5 }) },
+  { name: 'glass', make: () => new THREE.MeshPhysicalMaterial({
+      transmission: 1, ior: 1.48, thickness: 0.55, dispersion: 0.28,
+      roughness: 0.12, roughnessMap: grain, metalness: 0,
+      clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 1.35 }) },
+  { name: 'chrome', make: () => new THREE.MeshPhysicalMaterial({
+      color: 0xffffff, metalness: 1, roughness: 0.3, roughnessMap: streaks,
+      bumpMap: streaks, bumpScale: 0.35, envMapIntensity: 1.6 }) },
+  { name: 'soapglass', make: () => new THREE.MeshPhysicalMaterial({
+      transmission: 1, ior: 1.4, thickness: 0.4, dispersion: 0.18,
+      roughness: 0.08, metalness: 0, iridescence: 1, iridescenceIOR: 1.75,
+      envMapIntensity: 1.25 }) },
+  { name: 'oil', make: () => new THREE.MeshPhysicalMaterial({
+      color: 0x101014, metalness: 0.3, roughness: 0.2, roughnessMap: streaks,
+      iridescence: 1, iridescenceIOR: 1.8, envMapIntensity: 1.3 }) },
+  { name: 'gold', make: () => new THREE.MeshPhysicalMaterial({
+      color: 0xd8a04e, metalness: 1, roughness: 0.28, roughnessMap: streaks,
+      bumpMap: streaks, bumpScale: 0.25, envMapIntensity: 1.35 }) },
 ];
 
 export function initSetPiece(stage) {
@@ -101,72 +105,35 @@ export function initSetPiece(stage) {
   backdrop.position.z = -4;
   scene.add(backdrop);
 
-  const MATERIALS = [
-    { name: 'glass', make: () => new THREE.MeshPhysicalMaterial({
-        transmission: 1, ior: 1.48, thickness: 0.55, dispersion: 0.28,
-        roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.06,
-        envMapIntensity: 1.35 }) },
-    { name: 'chrome', make: () => new THREE.MeshPhysicalMaterial({
-        color: 0xffffff, metalness: 1, roughness: 0.05, envMapIntensity: 1.6 }) },
-    { name: 'soap', make: () => new THREE.MeshPhysicalMaterial({
-        color: 0x101014, metalness: 0.25, roughness: 0.16,
-        iridescence: 1, iridescenceIOR: 1.8, envMapIntensity: 1.3 }) },
-    { name: 'gold', make: () => new THREE.MeshPhysicalMaterial({
-        color: 0xd8a04e, metalness: 1, roughness: 0.2, envMapIntensity: 1.35 }) },
-    { name: 'ceramic', make: () => new THREE.MeshPhysicalMaterial({
-        color: 0xf5f5f3, metalness: 0, roughness: 0.5, clearcoat: 0.45,
-        clearcoatRoughness: 0.3, envMapIntensity: 0.9 }) },
-    { name: 'obsidian', make: () => new THREE.MeshPhysicalMaterial({
-        color: 0x0b0b0d, metalness: 0.1, roughness: 0.07, clearcoat: 1,
-        clearcoatRoughness: 0.05, envMapIntensity: 1.5 }) },
-  ];
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const geo = new THREE.TorusKnotGeometry(0.62, 0.24, coarse ? 180 : 280, coarse ? 28 : 44);
+  const knot = new THREE.Mesh(geo, null);
+  knot.scale.setScalar(0.62);
+  scene.add(knot);
 
-  // pick phase: two tiny cyclers under the stage
+  // material dial (temporary, until the finish is locked)
   const ui = document.createElement('div');
   ui.className = 'pick-ui';
-  const formBtn = document.createElement('button');
   const matBtn = document.createElement('button');
-  ui.append(formBtn, matBtn);
+  ui.appendChild(matBtn);
   stage.appendChild(ui);
 
-  const params = new URLSearchParams(location.search);
-  let idx = Math.max(0, FORMS.findIndex((f) => f.name === params.get('form')));
-  let mdx = Math.max(0, MATERIALS.findIndex((m) => m.name === params.get('mat')));
+  let mdx = Math.max(0, MATERIALS.findIndex((m) => m.name === new URLSearchParams(location.search).get('mat')));
   let material = null;
-  let piece = null;
-
   function setMat(i) {
     mdx = (i + MATERIALS.length) % MATERIALS.length;
     const next = MATERIALS[mdx].make();
-    if (piece) piece.traverse((o) => { if (o.isMesh) o.material = next; });
+    knot.material = next;
     if (material) material.dispose();
     material = next;
     matBtn.textContent = `material · ${MATERIALS[mdx].name}`;
   }
-  function setForm(i) {
-    idx = (i + FORMS.length) % FORMS.length;
-    if (piece) {
-      scene.remove(piece);
-      piece.traverse((o) => o.geometry && o.geometry.dispose());
-    }
-    piece = FORMS[idx].build(material);
-    piece.scale.setScalar(FORMS[idx].scale);
-    scene.add(piece);
-    formBtn.textContent = `form · ${FORMS[idx].name}`;
-  }
   setMat(mdx);
-  setForm(idx);
-
+  matBtn.addEventListener('click', () => setMat(mdx + 1));
   addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') setForm(idx + 1);
-    if (e.key === 'ArrowLeft') setForm(idx - 1);
     if (e.key === 'ArrowUp') setMat(mdx + 1);
     if (e.key === 'ArrowDown') setMat(mdx - 1);
   });
-  canvas.style.pointerEvents = 'auto';
-  canvas.addEventListener('click', () => setForm(idx + 1));
-  formBtn.addEventListener('click', () => setForm(idx + 1));
-  matBtn.addEventListener('click', () => setMat(mdx + 1));
 
   const dpr = Math.min(2, devicePixelRatio || 1);
   renderer.setPixelRatio(dpr);
@@ -178,42 +145,90 @@ export function initSetPiece(stage) {
   new ResizeObserver(resize).observe(stage);
   resize();
 
-  // cursor: lean toward it; speed = spin push
-  let leanX = 0, leanY = 0, boost = 0, lastX = 0, lastY = 0, lastT = 0;
-  function onMove(x, y) {
-    const box = stage.getBoundingClientRect();
-    const nx = Math.max(-1, Math.min(1, (x - box.left - box.width / 2) / (box.width * 0.8)));
-    const ny = Math.max(-1, Math.min(1, (y - box.top - box.height / 2) / (box.height * 0.8)));
-    leanX = ny * 0.30;
-    leanY = nx * 0.35;
+  // ---- motion state ----
+  const IDLE_SPIN = 0.32;          // baseline drift, rad/s
+  let avY = IDLE_SPIN, avX = 0.05; // angular velocity
+  let grabbing = false;
+  let leanX = 0, leanY = 0;
+  let lastX = 0, lastY = 0, lastT = 0;
+
+  canvas.style.pointerEvents = 'auto';
+  canvas.style.cursor = 'grab';
+  canvas.style.touchAction = 'none';
+
+  canvas.addEventListener('pointerdown', (e) => {
+    grabbing = true;
+    canvas.setPointerCapture(e.pointerId);
+    canvas.style.cursor = 'grabbing';
+    lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!grabbing) return;
     const now = performance.now();
-    if (lastT) {
-      const dt = Math.max(8, now - lastT);
-      boost = Math.min(2.4, boost + (Math.hypot(x - lastX, y - lastY) / dt) * 0.5);
+    const dt = Math.max(8, now - lastT) / 1000;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    // drag rotates directly; velocity is remembered for the throw
+    knot.rotation.y += dx * 0.006;
+    knot.rotation.x += dy * 0.006;
+    avY = (dx * 0.006) / dt;
+    avX = (dy * 0.006) / dt;
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
+  });
+  const release = (e) => {
+    if (!grabbing) return;
+    grabbing = false;
+    canvas.style.cursor = 'grab';
+    if (e.pointerId !== undefined) {
+      try { canvas.releasePointerCapture(e.pointerId); } catch {}
     }
-    lastX = x; lastY = y; lastT = now;
-  }
-  addEventListener('pointermove', (e) => onMove(e.clientX, e.clientY), { passive: true });
-  addEventListener('touchmove', (e) => {
-    const t = e.touches[0];
-    if (t) onMove(t.clientX, t.clientY);
+    // clamp the throw
+    avY = Math.max(-9, Math.min(9, avY));
+    avX = Math.max(-9, Math.min(9, avX));
+  };
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);
+
+  // gentle lean toward the cursor while at rest
+  addEventListener('pointermove', (e) => {
+    if (grabbing) return;
+    const box = stage.getBoundingClientRect();
+    leanY = Math.max(-1, Math.min(1, (e.clientX - box.left - box.width / 2) / (box.width * 0.9))) * 0.16;
+    leanX = Math.max(-1, Math.min(1, (e.clientY - box.top - box.height / 2) / (box.height * 0.9))) * 0.14;
   }, { passive: true });
 
-  let raf = 0, prev = 0;
+  let raf = 0, prev = 0, born = 0;
   function frame(now) {
+    if (!born) born = now;
     const dt = Math.min(0.05, (now - prev) / 1000 || 0.016);
     prev = now;
-    boost *= 0.96;
-    piece.rotation.y += dt * (0.45 + boost);
-    piece.rotation.x += (leanX - piece.rotation.x) * 0.055;
-    piece.rotation.z += (-leanY * 0.35 - piece.rotation.z) * 0.045;
-    piece.position.y = Math.sin(now / 1900) * 0.045;
+    const t = now / 1000;
+
+    if (!grabbing) {
+      // damp the throw back toward the idle drift
+      const k = 1 - Math.pow(0.35, dt);
+      avY += (IDLE_SPIN - avY) * k;
+      avX += ((0.05 + leanX * 0.4) - avX) * k;
+      knot.rotation.y += avY * dt;
+      knot.rotation.x += avX * dt;
+      // organic drift: spin speed wanders slightly
+      avY += Math.sin(t * 0.31) * 0.0004;
+    }
+
+    // breath + rest bob + arrival settle
+    const arrive = Math.min(1, (now - born) / 1400);
+    const settle = 1 - Math.pow(1 - arrive, 3);
+    const breath = 1 + Math.sin(t * 1.7) * 0.012;
+    knot.scale.setScalar(0.62 * breath * (0.9 + 0.1 * settle));
+    knot.position.y = Math.sin(t * 0.52) * 0.045;
+    knot.rotation.z += ((-leanY) - knot.rotation.z) * (grabbing ? 0 : 0.03);
+
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
 
   if (reduced) {
-    piece.rotation.y = -0.5;
+    knot.rotation.set(0.6, -0.7, 0);
     renderer.render(scene, camera);
   } else {
     raf = requestAnimationFrame(frame);
