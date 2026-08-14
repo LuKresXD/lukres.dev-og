@@ -1,4 +1,4 @@
-// Loader: the count steps while molten fragments fuse into the circle,
+// Loader: the count steps while the knot condenses out of the dark,
 // then the page assembles around it. Replay with R (kept during the build phase).
 
 const T = {
@@ -79,16 +79,7 @@ export function runLoader(opts = lastOpts) {
   root.classList.add('js-loading');
 
   const stage = document.querySelector('[data-stage]');
-  const orb = opts.visual || stage.querySelector('.mark-fallback');
-  const blobs = ['b1', 'b2', 'b3'].map((c) => {
-    let b = stage.querySelector('.' + c);
-    if (!b) {
-      b = document.createElement('i');
-      b.className = 'blob ' + c;
-      stage.appendChild(b);
-    }
-    return b;
-  });
+  const visual = opts.visual || stage.querySelector('.mark-fallback');
 
   const { el: countEl, cols } = buildCount();
   const timers = [];
@@ -97,32 +88,15 @@ export function runLoader(opts = lastOpts) {
   // count steps
   T.stepAt.forEach((at, i) => later(() => setDigits(cols, T.steps[i]), at));
 
-  // fragments drift to center and fuse
-  const targets = [
-    { x: '46%', y: '38%' }, { x: '-40%', y: '30%' }, { x: '4%', y: '-42%' },
-  ];
-  blobs.forEach((b, i) => {
-    b.animate(
-      [
-        { opacity: 0, transform: 'translate(0, 0) scale(0.7)', filter: 'blur(52px) saturate(1.2)' },
-        { opacity: 0.85, offset: 0.25 },
-        { opacity: 0.85, transform: `translate(${targets[i].x}, ${targets[i].y}) scale(0.92)`, filter: 'blur(26px) saturate(1.2)' },
-      ],
-      { duration: T.congealDur, delay: T.congealStart, easing: EASE_MAIN, fill: 'forwards' }
-    );
-    b.animate([{ opacity: 0.85 }, { opacity: 0 }], {
-      duration: 500, delay: T.orbIn[0] + 350, easing: 'ease-out', fill: 'forwards',
-    });
-  });
-
-  // the circle arrives out of the fusion
-  orb.animate(
+  // the knot condenses out of the dark: heavy blur sharpening into focus
+  visual.animate(
     [
-      { opacity: 0, transform: 'scale(0.86)', filter: 'blur(18px)' },
-      { opacity: 1, transform: 'scale(1.03)', filter: 'blur(0px)', offset: 0.72 },
+      { opacity: 0, transform: 'scale(0.72)', filter: 'blur(42px) brightness(2.2)' },
+      { opacity: 1, filter: 'blur(14px) brightness(1.35)', offset: 0.55 },
+      { opacity: 1, transform: 'scale(1.03)', filter: 'blur(0px) brightness(1)', offset: 0.85 },
       { opacity: 1, transform: 'scale(1)' },
     ],
-    { duration: T.orbIn[1], delay: T.orbIn[0], easing: EASE_MAIN, fill: 'forwards' }
+    { duration: T.congealDur + T.orbIn[1], delay: T.congealStart, easing: EASE_MAIN, fill: 'forwards' }
   );
 
   // exit: count leaves, the site assembles around the circle
