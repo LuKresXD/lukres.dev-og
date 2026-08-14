@@ -1,18 +1,15 @@
-// Loader: the wordmark letters rise out of their masks while the count
-// steps; the knot's stage sweeps open from the center as the name halves
-// breathe apart; then the site rises in. Replay with R during the build.
+// Loader: the count steps while molten fragments fuse into the circle,
+// then the page assembles around it. Replay with R (kept during the build phase).
 
 const T = {
-  letterDur: 1250,
-  letterStagger: 25,
-  growAt: 1250,               // stage sweep + name halves part
-  growDur: 1250,
-  stepAt: [300, 1400, 2150],  // count steps
-  stepDur: 520,
+  stepAt: [200, 900, 1600],   // when each count step fires
+  stepDur: 520,               // digit roll duration
   steps: [34, 68, 100],
-  uiAt: 2450,                 // site rises in
-  exitAt: 2650,               // count leaves
-  riseDur: 1250,
+  congealStart: 150,
+  congealDur: 1500,           // fragments drift + fuse
+  orbIn: [1250, 1050],        // [start, duration] orb crossfade over fragments
+  exitAt: 2350,               // count leaves, site assembles
+  riseDur: 1100,
   stagger: 100,
 };
 
@@ -52,6 +49,7 @@ function setDigits(cols, n) {
 }
 
 function assemble() {
+  root.classList.remove('js-loading');
   const rise = (el, delay) => {
     if (!el) return;
     el.animate(
@@ -59,74 +57,81 @@ function assemble() {
       { duration: T.riseDur, delay, easing: EASE_SETTLE, fill: 'backwards' }
     );
   };
-  rise(document.querySelector('.tagline'), 0);
-  document.querySelectorAll('.work-row').forEach((el, i) => rise(el, 100 + i * T.stagger));
+  rise(document.querySelector('.wordmark'), 0);
+  rise(document.querySelector('.tagline'), 280);
+  document.querySelectorAll('.work-row').forEach((el, i) => rise(el, 380 + i * T.stagger));
   const fade = (sel, delay) => {
     const el = document.querySelector(sel);
-    if (el) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay, easing: 'ease-out', fill: 'backwards' });
+    if (el) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay, easing: 'ease-out', fill: 'backwards' });
   };
-  fade('.site-head', 0);
-  fade('.site-foot', 400);
+  fade('.site-head', 150);
+  fade('.site-foot', 600);
 }
 
 let lastOpts = {};
 
 export function runLoader(opts = lastOpts) {
   lastOpts = opts;
-  const stage = document.querySelector('[data-stage]');
-  if (reduced || !stage) {
+  if (reduced || !document.querySelector('[data-stage]')) {
     root.classList.remove('js-loading');
     return;
   }
   root.classList.add('js-loading');
 
-  const letters = document.querySelectorAll('.wordmark .l > span');
-  const wmStart = document.querySelector('.wordmark .wm-start');
-  const wmEnd = document.querySelector('.wordmark .wm-end');
+  const stage = document.querySelector('[data-stage]');
+  const orb = opts.visual || stage.querySelector('.mark-fallback');
+  const blobs = ['b1', 'b2', 'b3'].map((c) => {
+    let b = stage.querySelector('.' + c);
+    if (!b) {
+      b = document.createElement('i');
+      b.className = 'blob ' + c;
+      stage.appendChild(b);
+    }
+    return b;
+  });
 
   const { el: countEl, cols } = buildCount();
   const timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
 
-  // 1 — the name rises out of its masks, letter by letter
-  letters.forEach((l, i) => {
-    l.animate(
-      [{ transform: 'translateY(110%)' }, { transform: 'translateY(0)' }],
-      { duration: T.letterDur, delay: i * T.letterStagger, easing: EASE_INOUT, fill: 'forwards' }
-    );
-  });
-
   // count steps
   T.stepAt.forEach((at, i) => later(() => setDigits(cols, T.steps[i]), at));
 
-  // 2 — the stage sweeps open from the center; the halves breathe apart
-  later(() => {
-    stage.style.opacity = '1';
-    stage.animate(
+  // fragments drift to center and fuse
+  const targets = [
+    { x: '46%', y: '38%' }, { x: '-40%', y: '30%' }, { x: '4%', y: '-42%' },
+  ];
+  blobs.forEach((b, i) => {
+    b.animate(
       [
-        { clipPath: 'inset(0 50% 0 50%)', opacity: 1 },
-        { clipPath: 'inset(0 0 0 0)', opacity: 1 },
+        { opacity: 0, transform: 'translate(0, 0) scale(0.7)', filter: 'blur(52px) saturate(1.2)' },
+        { opacity: 0.85, offset: 0.25 },
+        { opacity: 0.85, transform: `translate(${targets[i].x}, ${targets[i].y}) scale(0.92)`, filter: 'blur(26px) saturate(1.2)' },
       ],
-      { duration: T.growDur, easing: EASE_INOUT, fill: 'forwards' }
+      { duration: T.congealDur, delay: T.congealStart, easing: EASE_MAIN, fill: 'forwards' }
     );
-    if (wmStart) wmStart.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-0.05em)' }],
-      { duration: T.growDur, easing: EASE_INOUT, fill: 'forwards' });
-    if (wmEnd) wmEnd.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(0.05em)' }],
-      { duration: T.growDur, easing: EASE_INOUT, fill: 'forwards' });
-  }, T.growAt);
+    b.animate([{ opacity: 0.85 }, { opacity: 0 }], {
+      duration: 500, delay: T.orbIn[0] + 350, easing: 'ease-out', fill: 'forwards',
+    });
+  });
 
-  // 3 — the site rises in
-  later(() => {
-    root.classList.remove('js-loading');
-    assemble();
-  }, T.uiAt);
+  // the circle arrives out of the fusion
+  orb.animate(
+    [
+      { opacity: 0, transform: 'scale(0.86)', filter: 'blur(18px)' },
+      { opacity: 1, transform: 'scale(1.03)', filter: 'blur(0px)', offset: 0.72 },
+      { opacity: 1, transform: 'scale(1)' },
+    ],
+    { duration: T.orbIn[1], delay: T.orbIn[0], easing: EASE_MAIN, fill: 'forwards' }
+  );
 
-  // 4 — count leaves
+  // exit: count leaves, the site assembles around the circle
   later(() => {
     countEl.animate(
       [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-0.7em)' }],
       { duration: 460, easing: EASE_MAIN, fill: 'forwards' }
     ).onfinish = () => countEl.remove();
+    assemble();
   }, T.exitAt);
 
   return () => { timers.forEach(clearTimeout); countEl.remove(); };
