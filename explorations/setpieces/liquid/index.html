@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Liquid Page</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@600&f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0c; color: #f2f2f0; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #8b8b8e; }
+  header b { color: #f2f2f0; font-weight: 500; }
+  .stage { flex: 1; display: grid; place-content: center; text-align: center; position: relative; }
+  .word { font-family: "Switzer", sans-serif; font-weight: 600; font-size: clamp(4rem, 15vw, 15rem); letter-spacing: -0.045em; line-height: 1; position: relative; }
+  /* the smear — the page dragged sideways where the cursor passed */
+  .word .base { position: relative; z-index: 2; }
+  .word .smear { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .word .smear i { position: absolute; inset: 0; font-style: normal; opacity: 0.35; filter: blur(2px); color: #aeb9d6; }
+  .word .smear i:nth-child(1) { transform: translateX(14px) skewX(-8deg) scaleY(1.02); opacity: 0.4; }
+  .word .smear i:nth-child(2) { transform: translateX(38px) skewX(-16deg) scaleY(1.05); opacity: 0.22; filter: blur(5px); }
+  .word .smear i:nth-child(3) { transform: translateX(74px) skewX(-26deg) scaleY(1.1); opacity: 0.1; filter: blur(10px); }
+  .ripple { position: absolute; left: 58%; top: 30%; width: 190px; height: 190px; border-radius: 50%; border: 1.5px solid rgba(174,185,214,0.5); transform: scale(1); }
+  .ripple::after { content: ""; position: absolute; inset: 18px; border-radius: 50%; border: 1px solid rgba(174,185,214,0.28); }
+  .ripple::before { content: ""; position: absolute; inset: 40px; border-radius: 50%; border: 1px solid rgba(174,185,214,0.16); }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8b8b8e; padding-bottom: 8px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Liquid Page</span></header>
+  <div class="stage">
+    <div class="word">
+      <span class="smear" aria-hidden="true"><i>LuKres</i><i>LuKres</i><i>LuKres</i></span>
+      <span class="base">LuKres</span>
+    </div>
+    <span class="ripple" aria-hidden="true"></span>
+  </div>
+  <p class="cap">No object — the whole page is liquid. Cursor smears everything it crosses; scroll sends ripples through the layout</p>
+</div>
+</body>
+</html>

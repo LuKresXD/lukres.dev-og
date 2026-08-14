@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Magnet Type</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@600&f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b0b0d; color: #f2f2f0; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #8b8b8e; }
+  header b { color: #f2f2f0; font-weight: 500; }
+  .stage { flex: 1; display: grid; place-content: center; position: relative; }
+  .word { font-family: "Switzer", sans-serif; font-weight: 600; font-size: clamp(3.6rem, 13vw, 12.5rem); letter-spacing: -0.04em; line-height: 1; display: flex; }
+  .word span { display: inline-block; }
+  /* cursor sits between K and r — letters bend away like magnets repelling */
+  .word .c1 { transform: translate(-4px, 2px)  rotate(-2deg); }
+  .word .c2 { transform: translate(-9px, 5px)  rotate(-4deg); }
+  .word .c3 { transform: translate(-20px, 14px) rotate(-9deg); opacity: 0.92; }
+  .word .c4 { transform: translate(22px, -16px) rotate(10deg); opacity: 0.92; }
+  .word .c5 { transform: translate(10px, -6px) rotate(4deg); }
+  .word .c6 { transform: translate(4px, -2px)  rotate(2deg); }
+  .dot { position: absolute; left: 49.5%; top: 58%; width: 14px; height: 14px; border-radius: 50%; background: #f2f2f0; box-shadow: 0 0 0 7px rgba(242,242,240,0.12), 0 0 0 16px rgba(242,242,240,0.05); }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8b8b8e; padding-bottom: 8px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Magnet Type</span></header>
+  <div class="stage" role="img" aria-label="Letters bending away from the cursor like repelling magnets">
+    <div class="word">
+      <span class="c1">L</span><span class="c2">u</span><span class="c3">K</span><span class="c4">r</span><span class="c5">e</span><span class="c6">s</span>
+    </div>
+    <i class="dot" aria-hidden="true"></i>
+  </div>
+  <p class="cap">Every headline on the site is charged — letters bend away from the cursor and snap back with spring physics. The type itself is alive</p>
+</div>
+</body>
+</html>

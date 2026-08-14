@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Tunnel</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@600&f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #07070a; color: #f1f1f3; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #8a8a8e; position: relative; z-index: 2; }
+  header b { color: #f1f1f3; font-weight: 500; }
+  .stage { flex: 1; position: relative; perspective: 620px; display: grid; place-content: center; }
+  .ring {
+    position: absolute; left: 50%; top: 50%;
+    border: 1.5px solid rgba(160,175,210,0.5); border-radius: 18px;
+  }
+  .word { position: relative; z-index: 2; font-family: "Switzer", sans-serif; font-weight: 600; font-size: clamp(2.6rem, 8vw, 7rem); letter-spacing: -0.03em; text-align: center; }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8a8a8e; padding-bottom: 8px; text-align: center; position: relative; z-index: 2; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Tunnel</span></header>
+  <div class="stage" role="img" aria-label="Perspective corridor of rings receding to a point">
+    <div class="word">LuKres</div>
+  </div>
+  <p class="cap">Scroll = travel. Sections live along a corridor; the camera flies between them, walls streak with velocity</p>
+  <script>
+    const stage = document.querySelector('.stage');
+    for (let i = 0; i < 14; i++) {
+      const r = document.createElement('i');
+      r.className = 'ring';
+      const z = i / 13;
+      const w = 90 + z * 1300, h = 60 + z * 800;
+      r.style.width = w + 'px'; r.style.height = h + 'px';
+      r.style.transform = `translate(-50%,-50%)`;
+      r.style.opacity = (0.12 + (1 - z) * 0.55).toFixed(2);
+      r.style.borderRadius = (6 + z * 26) + 'px';
+      stage.appendChild(r);
+    }
+  </script>
+</div>
+</body>
+</html>

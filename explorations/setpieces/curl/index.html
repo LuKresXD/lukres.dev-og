@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Scroll Spectacle</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@600&f[]=satoshi@400,500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b0b0d; color: #f2f2f0; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #8b8b8e; }
+  header b { color: #f2f2f0; font-weight: 500; }
+  .stage { flex: 1; position: relative; perspective: 1200px; display: grid; place-content: center; }
+  .card {
+    width: min(64vw, 760px); aspect-ratio: 16/9.5; border-radius: 14px; position: relative;
+    background: linear-gradient(135deg, #1d2430, #10141c 55%, #232d3e);
+    box-shadow: 0 60px 120px -40px rgba(0,0,0,0.8);
+    transform: rotateX(12deg);
+  }
+  .card .label { position: absolute; left: 34px; bottom: 26px; font-family: "Switzer", sans-serif; font-weight: 600; font-size: clamp(1.6rem, 3.4vw, 2.6rem); letter-spacing: -0.02em; }
+  .card .idx { position: absolute; left: 34px; top: 26px; font-size: 12px; letter-spacing: 0.14em; color: #93a0b4; }
+  /* the peel — top-right corner curling as the next card drags over */
+  .peel {
+    position: absolute; right: -2px; top: -2px; width: 46%; height: 62%;
+    border-radius: 0 14px 0 60%;
+    background:
+      linear-gradient(215deg, #34405a 0%, #6d7d9c 30%, #d7deeb 46%, #2c3548 60%, #171c26 100%);
+    box-shadow: -26px 30px 50px -18px rgba(0,0,0,0.65);
+    transform: rotate(2deg);
+  }
+  .peel::after {
+    content: ""; position: absolute; left: -30%; bottom: -34%; width: 130%; height: 60%;
+    background: radial-gradient(60% 100% at 50% 0%, rgba(0,0,0,0.45), transparent 70%);
+  }
+  .next {
+    position: absolute; right: -7%; top: -14%; width: 42%; aspect-ratio: 16/10; border-radius: 12px;
+    background: linear-gradient(135deg, #2b1f2e, #17121c 60%, #3a2740);
+    box-shadow: 0 40px 90px -30px rgba(0,0,0,0.75);
+    transform: rotate(7deg) rotateX(14deg);
+  }
+  .next .label2 { position: absolute; left: 22px; bottom: 16px; font-family: "Switzer", sans-serif; font-weight: 600; font-size: 1.1rem; }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8b8b8e; padding-bottom: 8px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Scroll Spectacle</span></header>
+  <div class="stage" role="img" aria-label="A case-study card mid-peel as the next one drags over it">
+    <div class="card">
+      <span class="idx">CASE — VETO</span>
+      <span class="label">Veto</span>
+      <div class="peel"></div>
+    </div>
+    <div class="next"><span class="label2">Senthos</span></div>
+  </div>
+  <p class="cap">The wow lives in the work section: each case study curls off like a page as the next drags in — scroll drives every fold</p>
+</div>
+</body>
+</html>

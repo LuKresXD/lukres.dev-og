@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Particle Swarm</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@700&f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #08090c; color: #f1f2f4; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #898b90; }
+  header b { color: #f1f2f4; font-weight: 500; }
+  .stage { flex: 1; position: relative; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #898b90; padding-bottom: 8px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Particle Swarm</span></header>
+  <div class="stage"><canvas id="c"></canvas></div>
+  <p class="cap">~200k particles hold the wordmark. Cursor blows them apart; they always find their way home. Sections reform them into new shapes</p>
+</div>
+<script>
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  const W = cv.width = cv.offsetWidth * 2;
+  const H = cv.height = cv.offsetHeight * 2;
+
+  // rasterize the wordmark, then sample it into particles
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const octx = off.getContext('2d');
+  function draw() {
+    octx.clearRect(0, 0, W, H);
+    octx.fillStyle = '#fff';
+    octx.font = `700 ${Math.min(W * 0.16, 420)}px Switzer, sans-serif`;
+    octx.textAlign = 'center'; octx.textBaseline = 'middle';
+    octx.fillText('LuKres', W / 2, H / 2);
+    const img = octx.getImageData(0, 0, W, H).data;
+    ctx.clearRect(0, 0, W, H);
+    const gap = 7;
+    // a "gust" zone upper-right where particles are mid-scatter
+    const gx = W * 0.66, gy = H * 0.34;
+    for (let y = 0; y < H; y += gap) {
+      for (let x = 0; x < W; x += gap) {
+        if (img[(y * W + x) * 4 + 3] > 128) {
+          const d = Math.hypot(x - gx, y - gy);
+          const blow = Math.max(0, 1 - d / (W * 0.22));
+          const ang = Math.atan2(y - gy, x - gx);
+          const px = x + Math.cos(ang) * blow * blow * W * 0.09 + (Math.random() - 0.5) * 3;
+          const py = y + Math.sin(ang) * blow * blow * W * 0.09 + (Math.random() - 0.5) * 3;
+          const a = 0.9 - blow * 0.55 + Math.random() * 0.1;
+          const r = 1.6 + blow * 1.4;
+          ctx.fillStyle = `rgba(${225 + blow * 30}, ${228 + blow * 10}, ${238}, ${a})`;
+          ctx.beginPath(); ctx.arc(px, py, r, 0, 7); ctx.fill();
+        }
+      }
+    }
+  }
+  document.fonts.ready.then(() => setTimeout(draw, 120));
+  draw();
+</script>
+</body>
+</html>

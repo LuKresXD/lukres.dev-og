@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set piece · The Physical Wordmark</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@700&f[]=satoshi@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d0d10; color: #f3f3f1; font-family: "Satoshi", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; }
+  .frame { max-width: 1400px; margin: 0 auto; padding: 26px clamp(20px, 3.5vw, 64px); height: 100%; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; font-size: 13px; color: #8d8d90; }
+  header b { color: #f3f3f1; font-weight: 500; }
+  .stage { flex: 1; position: relative; perspective: 900px; }
+  .stage span {
+    position: absolute; font-family: "Clash Display", sans-serif; font-weight: 700;
+    font-size: clamp(4.5rem, 13vw, 12rem); line-height: 1;
+    text-shadow: 0 22px 40px rgba(0,0,0,0.55);
+  }
+  /* letters mid-clatter: someone just threw the K */
+  .l1 { left: 4%;  top: 24%; transform: rotate(-7deg); }
+  .l2 { left: 17%; top: 30%; transform: rotate(3deg); }
+  .l3 { left: 34%; top: 12%; transform: rotate(-24deg) translateY(-8%); color: #ffd44d; }
+  .l4 { left: 47%; top: 34%; transform: rotate(9deg); }
+  .l5 { left: 60%; top: 22%; transform: rotate(-4deg); }
+  .l6 { left: 74%; top: 38%; transform: rotate(14deg); }
+  .floor { position: absolute; left: 0; right: 0; bottom: 16%; height: 1px; background: rgba(243,243,241,0.18); }
+  .shadow { position: absolute; bottom: calc(16% - 10px); width: 90px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.5); filter: blur(6px); }
+  .sh3 { left: 36%; width: 120px; }
+  .cap { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #8d8d90; padding-bottom: 8px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <header><span><b>LuKres</b> — Chicago</span><span>The Physical Wordmark</span></header>
+  <div class="stage" role="img" aria-label="Letters of the wordmark scattered mid-physics">
+    <span class="l1">L</span><span class="l2">u</span><span class="l3">K</span><span class="l4">r</span><span class="l5">e</span><span class="l6">s</span>
+    <i class="floor"></i><i class="shadow sh3"></i>
+  </div>
+  <p class="cap">Every letter has weight. Grab the K, throw it — they clatter, roll, and walk themselves back into place</p>
+</div>
+</body>
+</html>
