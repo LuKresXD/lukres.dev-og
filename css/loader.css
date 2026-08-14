@@ -17,7 +17,9 @@
 .js-loading .stage .mark-fallback,
 .js-loading .stage .stage-canvas,
 .js-loading .tagline,
-.js-loading .work,
+.js-loading .cards,
+.js-loading .exp,
+.js-loading .archive,
 .js-loading .site-foot { opacity: 0; }
 .js-loading { overflow: hidden; }
 

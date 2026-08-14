@@ -73,13 +73,16 @@ function assemble() {
   };
   rise(document.querySelector('.wordmark'), 0);
   rise(document.querySelector('.tagline'), 280);
-  document.querySelectorAll('.work-row').forEach((el, i) => rise(el, 380 + i * T.stagger));
+  rise(document.querySelector('.cards-head'), 380);
+  document.querySelectorAll('.card').forEach((el, i) => rise(el, 460 + i * T.stagger));
+  rise(document.querySelector('.exp'), 700);
+  rise(document.querySelector('.archive'), 800);
   const fade = (sel, delay) => {
     const el = document.querySelector(sel);
     if (el) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay, easing: 'ease-out', fill: 'backwards' });
   };
   fade('.site-head', 150);
-  fade('.site-foot', 600);
+  fade('.site-foot', 700);
 }
 
 let lastOpts = {};
