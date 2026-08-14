@@ -73,11 +73,14 @@ function assemble() {
   };
   rise(document.querySelector('.wordmark'), 0);
   rise(document.querySelector('.tagline'), 280);
-  document.querySelectorAll('.work-row').forEach((el, i) => rise(el, 380 + i * T.stagger));
+  rise(document.querySelector('.exp'), 500);
+  rise(document.querySelector('.archive'), 600);
   const fade = (sel, delay) => {
     const el = document.querySelector(sel);
     if (el) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 600, delay, easing: 'ease-out', fill: 'backwards' });
   };
+  // the ride is pinned by the scroll engine: opacity only, never transforms
+  fade('.hwrap', 380);
   fade('.site-head', 150);
   fade('.site-foot', 600);
 }
