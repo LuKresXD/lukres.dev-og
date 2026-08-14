@@ -28,8 +28,8 @@
 /* initial hidden states — only while js-loading; no JS = site fully visible */
 .js-loading .site-head,
 .js-loading .wordmark,
-.js-loading .stage .orb,
-.js-loading .stage .circle-canvas,
+.js-loading .stage .mark-fallback,
+.js-loading .stage .stage-canvas,
 .js-loading .tagline,
 .js-loading .work,
 .js-loading .site-foot { opacity: 0; }

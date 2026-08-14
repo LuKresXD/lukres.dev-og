@@ -1,10 +1,10 @@
 import { runLoader } from './loader.js';
-import { initCircle } from './circle.js';
+import { initSetPiece } from './setpiece.js';
 
 const stage = document.querySelector('[data-stage]');
-const circle = initCircle(stage);
-if (circle) {
-  const fallback = stage.querySelector('.orb');
+const piece = initSetPiece(stage);
+if (piece) {
+  const fallback = stage.querySelector('.mark-fallback');
   if (fallback) fallback.style.visibility = 'hidden';
 }
-runLoader({ visual: circle?.el });
+runLoader({ visual: piece?.el });

@@ -79,7 +79,7 @@ export function runLoader(opts = lastOpts) {
   root.classList.add('js-loading');
 
   const stage = document.querySelector('[data-stage]');
-  const orb = opts.visual || stage.querySelector('.orb');
+  const orb = opts.visual || stage.querySelector('.mark-fallback');
   const blobs = ['b1', 'b2', 'b3'].map((c) => {
     let b = stage.querySelector('.' + c);
     if (!b) {
