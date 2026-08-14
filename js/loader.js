@@ -9,14 +9,15 @@ const T = {
   congealDur: 1500,           // fragments drift + fuse
   orbIn: [1250, 1050],        // [start, duration] orb crossfade over fragments
   exitAt: 2350,               // count leaves, site assembles
-  riseDur: 750,
-  stagger: 70,
+  riseDur: 1100,
+  stagger: 100,
 };
 
 const root = document.documentElement;
 const css = getComputedStyle(root);
 const EASE_MAIN = css.getPropertyValue('--ease-main').trim();
 const EASE_INOUT = css.getPropertyValue('--ease-inout').trim();
+const EASE_SETTLE = css.getPropertyValue('--ease-settle').trim();
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -53,7 +54,7 @@ function assemble() {
     if (!el) return;
     el.animate(
       [{ opacity: 0, transform: 'translateY(38px)' }, { opacity: 1, transform: 'translateY(0)' }],
-      { duration: T.riseDur, delay, easing: EASE_MAIN, fill: 'backwards' }
+      { duration: T.riseDur, delay, easing: EASE_SETTLE, fill: 'backwards' }
     );
   };
   rise(document.querySelector('.wordmark'), 0);
