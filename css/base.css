@@ -96,6 +96,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: absolute; left: -15%; top: -15%;
   width: 130%; height: 130%; max-width: none;
 }
+.stage .form-label {
+  position: absolute; left: 50%; bottom: -8%; transform: translateX(-50%);
+  font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--mid); opacity: 0; transition: opacity var(--t-fast) var(--ease-settle);
+  pointer-events: none; white-space: nowrap;
+}
+.stage .form-label.on { opacity: 1; }
 
 /* work */
 .work { margin-top: var(--space-5); border-top: 1px solid var(--line); }

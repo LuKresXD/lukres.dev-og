@@ -1,6 +1,9 @@
-// The set piece — the LuKres mark cut from real glass. It spins slowly,
-// leans toward the cursor, and fast movement gives it a push; light
-// refracts and disperses through it. All chroma on the site lives here.
+// The set piece — a form cut from real glass. It spins slowly, leans toward
+// the cursor, and fast movement gives it a push; light refracts and disperses
+// through it. All chroma on the site lives here.
+//
+// Pick phase: several candidate forms share the one glass system.
+// Cycle with ArrowLeft/Right, click/tap the form, or force one via ?form=name.
 
 import * as THREE from 'three';
 import { RoomEnvironment } from '../vendor/room-environment.js';
@@ -22,6 +25,50 @@ function toShape(outer, hole) {
   s.holes.push(h);
   return s;
 }
+
+function facet(geo) {
+  const g = geo.toNonIndexed();
+  g.computeVertexNormals();
+  geo.dispose();
+  return g;
+}
+
+function twistedBar() {
+  const g = new THREE.BoxGeometry(0.62, 2.1, 0.62, 6, 64, 6);
+  const pos = g.attributes.position;
+  const v = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    const a = v.y * 1.15;
+    const c = Math.cos(a), s = Math.sin(a);
+    pos.setXYZ(i, v.x * c - v.z * s, v.y, v.x * s + v.z * c);
+  }
+  g.computeVertexNormals();
+  return g;
+}
+
+function markGroup(material) {
+  const opts = {
+    depth: 0.3, bevelEnabled: true, bevelThickness: 0.05,
+    bevelSize: 0.04, bevelSegments: 3, curveSegments: 2,
+  };
+  const grp = new THREE.Group();
+  for (const [o, h] of [[F1_OUTER, F1_HOLE], [F2_OUTER, F2_HOLE]]) {
+    const geo = new THREE.ExtrudeGeometry(toShape(o, h), opts);
+    geo.translate(0, 0, -opts.depth / 2);
+    grp.add(new THREE.Mesh(geo, material));
+  }
+  return grp;
+}
+
+const FORMS = [
+  { name: 'knot',     scale: 0.62, build: (m) => new THREE.Mesh(new THREE.TorusKnotGeometry(0.62, 0.24, 240, 40), m) },
+  { name: 'gem',      scale: 0.66, build: (m) => new THREE.Mesh(facet(new THREE.IcosahedronGeometry(0.95, 1)), m) },
+  { name: 'monolith', scale: 0.72, build: (m) => new THREE.Mesh(twistedBar(), m) },
+  { name: 'ring',     scale: 0.66, build: (m) => new THREE.Mesh(new THREE.TorusGeometry(0.76, 0.29, 48, 120), m) },
+  { name: 'coil',     scale: 0.68, build: (m) => new THREE.Mesh(new THREE.TorusKnotGeometry(0.58, 0.17, 280, 28, 1, 3), m) },
+  { name: 'mark',     scale: 0.82, build: (m) => markGroup(m) },
+];
 
 export function initSetPiece(stage) {
   if (!stage) return null;
@@ -49,7 +96,7 @@ export function initSetPiece(stage) {
   // dark backdrop so transmission has ground to refract; same color as the page
   const backdrop = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshBasicMaterial({ color: 0x060607 })
+    new THREE.MeshBasicMaterial({ color: 0x060607, toneMapped: false })
   );
   backdrop.position.z = -4;
   scene.add(backdrop);
@@ -66,22 +113,39 @@ export function initSetPiece(stage) {
     envMapIntensity: 1.35,
   });
 
-  const extrude = {
-    depth: 0.3,
-    bevelEnabled: true,
-    bevelThickness: 0.05,
-    bevelSize: 0.04,
-    bevelSegments: 3,
-    curveSegments: 2,
-  };
-  const mark = new THREE.Group();
-  for (const [o, h] of [[F1_OUTER, F1_HOLE], [F2_OUTER, F2_HOLE]]) {
-    const geo = new THREE.ExtrudeGeometry(toShape(o, h), extrude);
-    geo.translate(0, 0, -extrude.depth / 2);
-    mark.add(new THREE.Mesh(geo, glass));
+  // pick phase: cycling label
+  const label = document.createElement('span');
+  label.className = 'form-label';
+  stage.appendChild(label);
+  let labelTimer = 0;
+  function showLabel(text) {
+    label.textContent = text;
+    label.classList.add('on');
+    clearTimeout(labelTimer);
+    labelTimer = setTimeout(() => label.classList.remove('on'), 1400);
   }
-  mark.scale.setScalar(0.82);
-  scene.add(mark);
+
+  let piece = null;
+  let idx = Math.max(0, FORMS.findIndex((f) => f.name === new URLSearchParams(location.search).get('form')));
+  function setForm(i) {
+    idx = (i + FORMS.length) % FORMS.length;
+    if (piece) {
+      scene.remove(piece);
+      piece.traverse((o) => o.geometry && o.geometry.dispose());
+    }
+    piece = FORMS[idx].build(glass);
+    piece.scale.setScalar(FORMS[idx].scale);
+    scene.add(piece);
+    showLabel(`${idx + 1}/${FORMS.length} · ${FORMS[idx].name}`);
+  }
+  setForm(idx);
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') setForm(idx + 1);
+    if (e.key === 'ArrowLeft') setForm(idx - 1);
+  });
+  canvas.style.pointerEvents = 'auto';
+  canvas.addEventListener('click', () => setForm(idx + 1));
 
   const dpr = Math.min(2, devicePixelRatio || 1);
   renderer.setPixelRatio(dpr);
@@ -98,7 +162,7 @@ export function initSetPiece(stage) {
   function onMove(x, y) {
     const box = stage.getBoundingClientRect();
     const nx = Math.max(-1, Math.min(1, (x - box.left - box.width / 2) / (box.width * 0.8)));
-    const ny = Math.max(-1, Math.min(1, (y - box.top + scrollY * 0 - box.height / 2) / (box.height * 0.8)));
+    const ny = Math.max(-1, Math.min(1, (y - box.top - box.height / 2) / (box.height * 0.8)));
     leanX = ny * 0.30;
     leanY = nx * 0.35;
     const now = performance.now();
@@ -119,16 +183,16 @@ export function initSetPiece(stage) {
     const dt = Math.min(0.05, (now - prev) / 1000 || 0.016);
     prev = now;
     boost *= 0.96;
-    mark.rotation.y += dt * (0.45 + boost);
-    mark.rotation.x += (leanX - mark.rotation.x) * 0.055;
-    mark.rotation.z += (-leanY * 0.35 - mark.rotation.z) * 0.045;
-    mark.position.y = Math.sin(now / 1900) * 0.045;
+    piece.rotation.y += dt * (0.45 + boost);
+    piece.rotation.x += (leanX - piece.rotation.x) * 0.055;
+    piece.rotation.z += (-leanY * 0.35 - piece.rotation.z) * 0.045;
+    piece.position.y = Math.sin(now / 1900) * 0.045;
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
   }
 
   if (reduced) {
-    mark.rotation.y = -0.5;
+    piece.rotation.y = -0.5;
     renderer.render(scene, camera);
   } else {
     raf = requestAnimationFrame(frame);
