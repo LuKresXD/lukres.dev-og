@@ -26,4 +26,8 @@ const visual = mountKnot(document);
 runLoader({ visual });
 
 // barba+gsap load as classic deferred scripts before this module runs
-initTransitions({ onHomeEnter: (container) => mountKnot(container) });
+initTransitions({
+  onEnter: (container, namespace) => {
+    if (namespace === 'home') mountKnot(container);
+  },
+});
