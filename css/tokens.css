@@ -1,0 +1,45 @@
+/* LuKres — design tokens. Single source of truth for color, type, space, motion. */
+
+:root {
+  /* color — monochrome law: chroma lives only inside the set piece */
+  --bg: #060607;
+  --fg: #f5f5f3;
+  --mid: #8e8e90;
+  --line: #1c1c1e;
+
+  /* type */
+  --font-display: "Clash Display", "Helvetica Neue", sans-serif;
+  --font-body: "Satoshi", -apple-system, "Helvetica Neue", sans-serif;
+
+  /* fluid scale — capped at the container ceiling, floors tuned for 390px */
+  --text-xs: clamp(0.6875rem, 0.62rem + 0.3vw, 0.8125rem);
+  --text-sm: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);
+  --text-base: clamp(0.9375rem, 0.85rem + 0.4vw, 1.0625rem);
+  --text-md: clamp(1.05rem, 0.9rem + 0.8vw, 1.5rem);
+  --text-lg: clamp(1.6rem, 1.1rem + 2.6vw, 3.4rem);
+  --text-xl: clamp(2.2rem, 1.4rem + 4.4vw, 5.2rem);
+  --text-mega: clamp(3.9rem, 15vw, 14.5rem);
+
+  /* space */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.75rem;
+  --space-4: clamp(2.5rem, 6vh, 4.5rem);
+  --space-5: clamp(4.5rem, 12vh, 9.5rem);
+  --gutter: clamp(20px, 3.5vw, 72px);
+  --container: 1600px;
+
+  /* motion — the house voice; every animation on the site speaks it */
+  --ease-main: cubic-bezier(0.625, 0.05, 0, 1);
+  --ease-inout: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 180ms;
+  --t-base: 420ms;
+  --t-slow: 800ms;
+
+  /* layers */
+  --z-stage: 1;
+  --z-content: 2;
+  --z-chrome: 10;
+  --z-overlay: 100;
+}
