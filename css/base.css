@@ -102,9 +102,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   content: ""; position: absolute; inset: 0; border-radius: 50%;
   background: radial-gradient(70% 70% at 50% 82%, rgba(6, 6, 7, 0.85), transparent 60%);
 }
-.stage-note {
-  margin-top: 16px; font-size: var(--text-xs); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--mid);
+.stage .circle-canvas {
+  position: absolute; left: -15%; top: -15%;
+  width: 130%; height: 130%; max-width: none;
 }
 
 /* work */

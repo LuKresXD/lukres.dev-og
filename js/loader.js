@@ -58,8 +58,7 @@ function assemble() {
     );
   };
   rise(document.querySelector('.wordmark'), 0);
-  rise(document.querySelector('.stage-note'), 220);
-  rise(document.querySelector('.tagline'), 300);
+  rise(document.querySelector('.tagline'), 280);
   document.querySelectorAll('.work-row').forEach((el, i) => rise(el, 380 + i * T.stagger));
   const fade = (sel, delay) => {
     const el = document.querySelector(sel);
@@ -69,7 +68,10 @@ function assemble() {
   fade('.site-foot', 600);
 }
 
-export function runLoader() {
+let lastOpts = {};
+
+export function runLoader(opts = lastOpts) {
+  lastOpts = opts;
   if (reduced || !document.querySelector('[data-stage]')) {
     root.classList.remove('js-loading');
     return;
@@ -77,7 +79,7 @@ export function runLoader() {
   root.classList.add('js-loading');
 
   const stage = document.querySelector('[data-stage]');
-  const orb = stage.querySelector('.orb');
+  const orb = opts.visual || stage.querySelector('.orb');
   const blobs = ['b1', 'b2', 'b3'].map((c) => {
     let b = stage.querySelector('.' + c);
     if (!b) {
