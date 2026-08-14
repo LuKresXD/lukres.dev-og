@@ -22,23 +22,23 @@ function bakeTexture(draw) {
 
 // long directional smears: brushed metal, smeared reflections
 const streaks = bakeTexture((ctx) => {
-  for (let i = 0; i < 900; i++) {
+  for (let i = 0; i < 1600; i++) {
     const y = Math.random() * 512;
-    const w = 40 + Math.random() * 300;
+    const w = 40 + Math.random() * 340;
     const x = Math.random() * 512 - w / 2;
-    const v = Math.random();
-    ctx.fillStyle = `rgba(${v > 0.5 ? 255 : 0},${v > 0.5 ? 255 : 0},${v > 0.5 ? 255 : 0},${0.028 + Math.random() * 0.05})`;
-    ctx.fillRect(x, y, w, 0.6 + Math.random() * 1.6);
+    const v = Math.random() > 0.5 ? 255 : 0;
+    ctx.fillStyle = `rgba(${v},${v},${v},${0.09 + Math.random() * 0.14})`;
+    ctx.fillRect(x, y, w, 0.6 + Math.random() * 2.2);
   }
 });
 
-// blotchy mineral grain: polished stone, frost patches
+// blotchy mineral grain: polished stone, hammered highlights
 const grain = bakeTexture((ctx) => {
   for (let i = 0; i < 2400; i++) {
-    const r = 2 + Math.random() * 26;
+    const r = 3 + Math.random() * 30;
     const v = Math.random() > 0.5 ? 255 : 0;
     const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-    g.addColorStop(0, `rgba(${v},${v},${v},${0.02 + Math.random() * 0.045})`);
+    g.addColorStop(0, `rgba(${v},${v},${v},${0.07 + Math.random() * 0.12})`);
     g.addColorStop(1, 'rgba(128,128,128,0)');
     ctx.save();
     ctx.translate(Math.random() * 512, Math.random() * 512);
@@ -52,16 +52,16 @@ grain.repeat.set(2, 2);
 
 const MATERIALS = [
   { name: 'obsidian', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0x0b0b0d, metalness: 0.12, roughness: 0.16, roughnessMap: grain,
-      bumpMap: grain, bumpScale: 0.6, clearcoat: 1, clearcoatRoughness: 0.06,
+      color: 0x0b0b0d, metalness: 0.12, roughness: 0.3, roughnessMap: grain,
+      bumpMap: grain, bumpScale: 1.6, clearcoat: 1, clearcoatRoughness: 0.06,
       envMapIntensity: 1.5 }) },
   { name: 'glass', make: () => new THREE.MeshPhysicalMaterial({
-      transmission: 1, ior: 1.48, thickness: 0.55, dispersion: 0.28,
-      roughness: 0.12, roughnessMap: grain, metalness: 0,
-      clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 1.35 }) },
+      transmission: 1, ior: 1.52, thickness: 0.85, dispersion: 0.45,
+      roughness: 0.02, metalness: 0, specularIntensity: 1,
+      clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 2.1 }) },
   { name: 'chrome', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, metalness: 1, roughness: 0.3, roughnessMap: streaks,
-      bumpMap: streaks, bumpScale: 0.35, envMapIntensity: 1.6 }) },
+      color: 0xffffff, metalness: 1, roughness: 0.38, roughnessMap: streaks,
+      bumpMap: streaks, bumpScale: 1.1, envMapIntensity: 1.6 }) },
   { name: 'soapglass', make: () => new THREE.MeshPhysicalMaterial({
       transmission: 1, ior: 1.4, thickness: 0.4, dispersion: 0.18,
       roughness: 0.08, metalness: 0, iridescence: 1, iridescenceIOR: 1.75,
@@ -146,8 +146,9 @@ export function initSetPiece(stage) {
   resize();
 
   // ---- motion state ----
-  const IDLE_SPIN = 0.32;          // baseline drift, rad/s
-  let avY = IDLE_SPIN, avX = 0.05; // angular velocity
+  const IDLE_SPIN = 0.45;     // baseline drift, rad/s
+  let boost = 0;              // hover speed feeds the spin
+  let avX = 0, avY = 0;       // throw momentum from a grab
   let grabbing = false;
   let leanX = 0, leanY = 0;
   let lastX = 0, lastY = 0, lastT = 0;
@@ -189,12 +190,18 @@ export function initSetPiece(stage) {
   canvas.addEventListener('pointerup', release);
   canvas.addEventListener('pointercancel', release);
 
-  // gentle lean toward the cursor while at rest
+  // hover: lean toward the cursor, cursor speed pushes the spin
   addEventListener('pointermove', (e) => {
     if (grabbing) return;
     const box = stage.getBoundingClientRect();
-    leanY = Math.max(-1, Math.min(1, (e.clientX - box.left - box.width / 2) / (box.width * 0.9))) * 0.16;
-    leanX = Math.max(-1, Math.min(1, (e.clientY - box.top - box.height / 2) / (box.height * 0.9))) * 0.14;
+    leanX = Math.max(-1, Math.min(1, (e.clientY - box.top - box.height / 2) / (box.height * 0.8))) * 0.30;
+    leanY = Math.max(-1, Math.min(1, (e.clientX - box.left - box.width / 2) / (box.width * 0.8))) * 0.35;
+    const now = performance.now();
+    if (lastT) {
+      const dt = Math.max(8, now - lastT);
+      boost = Math.min(2.4, boost + (Math.hypot(e.clientX - lastX, e.clientY - lastY) / dt) * 0.5);
+    }
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
   }, { passive: true });
 
   let raf = 0, prev = 0, born = 0;
@@ -205,14 +212,19 @@ export function initSetPiece(stage) {
     const t = now / 1000;
 
     if (!grabbing) {
-      // damp the throw back toward the idle drift
-      const k = 1 - Math.pow(0.35, dt);
-      avY += (IDLE_SPIN - avY) * k;
-      avX += ((0.05 + leanX * 0.4) - avX) * k;
-      knot.rotation.y += avY * dt;
+      // throw momentum decays; hover boost decays; idle drift underneath
+      const damp = Math.pow(0.4, dt);
+      avX *= damp; avY *= damp;
+      boost *= Math.pow(0.25, dt);
+      knot.rotation.y += (IDLE_SPIN + boost + Math.sin(t * 0.31) * 0.06) * dt + avY * dt;
       knot.rotation.x += avX * dt;
-      // organic drift: spin speed wanders slightly
-      avY += Math.sin(t * 0.31) * 0.0004;
+
+      // once the throw settles, ease back to facing the cursor
+      if (Math.abs(avX) + Math.abs(avY) < 0.6) {
+        knot.rotation.x = ((knot.rotation.x + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+        knot.rotation.x += (leanX - knot.rotation.x) * 0.055;
+        knot.rotation.z += ((-leanY * 0.35) - knot.rotation.z) * 0.045;
+      }
     }
 
     // breath + rest bob + arrival settle
@@ -221,7 +233,6 @@ export function initSetPiece(stage) {
     const breath = 1 + Math.sin(t * 1.7) * 0.012;
     knot.scale.setScalar(0.62 * breath * (0.9 + 0.1 * settle));
     knot.position.y = Math.sin(t * 0.52) * 0.045;
-    knot.rotation.z += ((-leanY) - knot.rotation.z) * (grabbing ? 0 : 0.03);
 
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);
