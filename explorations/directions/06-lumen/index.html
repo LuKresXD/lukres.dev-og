@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 06 · Lumen</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --char: #121110; --warm: #f6ead8; --dim: #6d6862; --line: rgba(246,234,216,0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--char); color: var(--warm);
+    font-family: "General Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  /* the lumen — one warm light source; cursor-held in the real build */
+  .light {
+    position: fixed; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(42vw 42vw at 30% 22%, rgba(246,220,170,0.20), transparent 60%),
+      radial-gradient(60vw 60vw at 30% 22%, rgba(246,220,170,0.07), transparent 70%);
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--warm); outline-offset: 3px; }
+  .frame { position: relative; max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 3.5vw, 64px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 28px; font-size: 14px; color: var(--dim);
+  }
+  header .brand { font-weight: 600; color: var(--warm); }
+  nav { display: flex; gap: 28px; }
+  nav a:hover { color: var(--warm); }
+
+  .hero { padding: clamp(90px, 20vh, 200px) 0 0; }
+  .hero .word {
+    font-weight: 600; letter-spacing: -0.04em; line-height: 0.92;
+    font-size: clamp(3.8rem, 14vw, 14rem);
+    background:
+      radial-gradient(60vw 40vw at 30% 10%, var(--warm) 20%, rgba(246,234,216,0.16) 70%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .tag {
+    margin-top: clamp(22px, 4vh, 40px);
+    font-size: clamp(1rem, 1.9vw, 1.4rem); font-weight: 400;
+    color: var(--dim); max-width: 38ch; line-height: 1.55;
+  }
+  .hero .tag b { color: var(--warm); font-weight: 600; }
+
+  .cap { margin-top: clamp(48px, 9vh, 100px); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+
+  .work { margin-top: 16px; border-top: 1px solid var(--line); }
+  .work a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding: clamp(22px, 3.6vh, 36px) 0; border-bottom: 1px solid var(--line);
+  }
+  .work h2 { font-weight: 600; font-size: clamp(1.5rem, 3.6vw, 2.6rem); letter-spacing: -0.02em; color: var(--dim); }
+  .work a:hover h2 { color: var(--warm); }
+  .work .meta { color: var(--dim); font-size: 13.5px; text-align: right; line-height: 1.5; flex-shrink: 0; }
+
+  footer {
+    margin: clamp(70px, 12vh, 140px) 0 40px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;
+    font-size: 13px; color: var(--dim);
+  }
+  footer a:hover { color: var(--warm); }
+
+  @media (max-width: 720px) {
+    nav { display: none; }
+    .work a { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .work .meta { text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .work h2, nav a, footer a { transition: color 200ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="light" aria-hidden="true"></div>
+<div class="frame">
+
+  <header>
+    <span class="brand">LuKres</span>
+    <nav><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="word">LuKres</div>
+    <p class="tag">Made by <b>Luka Krestinin</b> — production systems, quant research,
+    and the occasional prize. What the light touches is what ships.</p>
+  </section>
+
+  <p class="cap">The light is the cursor in the real build — type catches it, shadows move</p>
+
+  <section class="work">
+    <a href="#"><h2>Veto</h2><span class="meta">Co-founder · 2026 —</span></a>
+    <a href="#"><h2>Senthos</h2><span class="meta">1st place, Solana track · SCBC 2026</span></a>
+    <a href="#"><h2>Teza</h2><span class="meta">Quant intern · Summer 2026</span></a>
+  </section>
+
+  <footer>
+    <span>© 2026 LuKres</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 05 · Poster</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;900&family=Archivo:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bone: #f1efe9; --ink: #111110; --red: #e2340f; --line: #111110;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bone); color: var(--ink);
+    font-family: "Archivo", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+  .frame { max-width: 1520px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 56px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: stretch;
+    border-bottom: 3px solid var(--ink); padding: 22px 0 14px;
+    font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  nav { display: flex; gap: 26px; align-items: baseline; }
+  nav a:hover { color: var(--red); }
+
+  .hero { position: relative; padding-top: clamp(28px, 5vh, 64px); }
+  .hero .word {
+    font-weight: 900; text-transform: uppercase;
+    font-size: clamp(3.6rem, 16.5vw, 17rem);
+    line-height: 0.82; letter-spacing: -0.04em;
+  }
+  .hero .word .k { color: var(--red); }
+
+  .bar {
+    margin-top: clamp(20px, 3.5vh, 40px);
+    display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center;
+  }
+  .bar .block { background: var(--red); height: clamp(28px, 4.5vh, 52px); }
+  .bar .label { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+
+  .hero .tag {
+    margin-top: clamp(22px, 4vh, 44px); font-size: clamp(1rem, 1.8vw, 1.35rem);
+    line-height: 1.45; max-width: 46ch; font-weight: 500;
+  }
+  .hero .tag i { font-style: italic; color: var(--red); }
+
+  .work { margin-top: clamp(56px, 10vh, 110px); border-top: 3px solid var(--line); }
+  .work a {
+    display: grid; grid-template-columns: auto 1fr auto; gap: clamp(14px, 3vw, 40px); align-items: baseline;
+    padding: clamp(18px, 3.2vh, 32px) 0; border-bottom: 1.5px solid var(--line);
+  }
+  .work .idx { font-size: 13px; font-weight: 900; color: var(--red); }
+  .work h2 {
+    font-weight: 900; text-transform: uppercase;
+    font-size: clamp(1.7rem, 4.8vw, 3.8rem); letter-spacing: -0.02em; line-height: 1;
+  }
+  .work .meta { font-size: 13px; font-weight: 500; text-transform: uppercase; text-align: right; line-height: 1.5; }
+  .work a:hover h2 { color: var(--red); }
+  .work a:hover .idx { color: var(--ink); }
+
+  footer {
+    margin: clamp(56px, 10vh, 110px) 0 0; border-top: 3px solid var(--line);
+    padding: 18px 0 34px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    font-size: 13px; font-weight: 500; text-transform: uppercase;
+  }
+  footer a:hover { color: var(--red); }
+
+  @media (max-width: 720px) {
+    nav { display: none; }
+    .work a { grid-template-columns: auto 1fr; }
+    .work .meta { grid-column: 2; text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .work h2, .work .idx, nav a, footer a { transition: color 140ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <span>LuKres — Chicago</span>
+    <nav><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="word">Lu<span class="k">K</span>res</div>
+    <div class="bar" aria-hidden="true">
+      <span class="label">Portfolio, second edition</span>
+      <span class="block"></span>
+      <span class="label">2026</span>
+    </div>
+    <p class="tag">Production systems, quant research, and the occasional prize —
+    by <i>Luka Krestinin</i>. Veto co-founder. Teza quant intern. CS + Math, UChicago.</p>
+  </section>
+
+  <section class="work">
+    <a href="#"><span class="idx">№1</span><h2>Veto</h2><span class="meta">Co-founder<br>2026 —</span></a>
+    <a href="#"><span class="idx">№2</span><h2>Senthos</h2><span class="meta">1st · Solana track<br>SCBC 2026</span></a>
+    <a href="#"><span class="idx">№3</span><h2>Teza</h2><span class="meta">Quant intern<br>Summer 2026</span></a>
+  </section>
+
+  <footer>
+    <span>© 2026 LuKres</span>
+    <span>The wordmark is a physical object in the real build — shove it, it snaps back</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

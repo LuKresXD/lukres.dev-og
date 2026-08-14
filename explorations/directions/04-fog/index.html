@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 04 · Fog</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@300,500,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0a0d18; --mist: #aeb6cc; --bright: #eef0f7; --line: rgba(174,182,204,0.16);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--deep); color: var(--bright);
+    font-family: "Switzer", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh; overflow-x: hidden;
+  }
+  /* the atmosphere — layered color fog; live volumetric in the real build */
+  .fog { position: fixed; inset: -20%; pointer-events: none; filter: blur(70px) saturate(1.2); }
+  .fog i { position: absolute; border-radius: 50%; display: block; }
+  .fog .a { width: 55vw; height: 55vw; left: -12vw; top: -14vh; background: radial-gradient(circle, rgba(43,140,160,0.55), transparent 65%); }
+  .fog .b { width: 48vw; height: 48vw; right: -10vw; top: 8vh;  background: radial-gradient(circle, rgba(160,60,150,0.4), transparent 65%); }
+  .fog .c { width: 40vw; height: 40vw; left: 28vw; bottom: -18vh; background: radial-gradient(circle, rgba(210,140,60,0.30), transparent 65%); }
+
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--bright); outline-offset: 3px; }
+  .frame { position: relative; max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 3.5vw, 64px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 28px; font-size: 14px; color: var(--mist);
+  }
+  header .brand { font-weight: 600; color: var(--bright); letter-spacing: -0.01em; }
+  nav { display: flex; gap: 28px; }
+  nav a:hover { color: var(--bright); }
+
+  .hero { padding: clamp(96px, 22vh, 220px) 0 0; }
+  .hero .word {
+    font-weight: 600; letter-spacing: -0.045em; line-height: 0.95;
+    font-size: clamp(4rem, 15vw, 15rem);
+    background: linear-gradient(115deg, #eef0f7 30%, rgba(238,240,247,0.55) 75%, rgba(238,240,247,0.85));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .tag {
+    margin-top: clamp(20px, 3.5vh, 36px); font-weight: 300;
+    font-size: clamp(1.05rem, 2vw, 1.5rem); color: var(--mist); max-width: 34ch; line-height: 1.5;
+  }
+  .hero .tag b { color: var(--bright); font-weight: 500; }
+
+  .cap { margin-top: clamp(48px, 9vh, 96px); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); opacity: 0.75; }
+
+  .work { margin-top: 18px; border-top: 1px solid var(--line); }
+  .work a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding: clamp(22px, 3.6vh, 36px) 0; border-bottom: 1px solid var(--line);
+  }
+  .work h2 { font-weight: 500; font-size: clamp(1.5rem, 3.6vw, 2.6rem); letter-spacing: -0.02em; }
+  .work .meta { color: var(--mist); font-size: 13.5px; text-align: right; line-height: 1.5; flex-shrink: 0; }
+  .work a:hover h2 { opacity: 0.6; }
+
+  footer {
+    margin: clamp(70px, 12vh, 140px) 0 40px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;
+    font-size: 13px; color: var(--mist);
+  }
+  footer a:hover { color: var(--bright); }
+
+  @media (max-width: 720px) {
+    nav { display: none; }
+    .work a { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .work .meta { text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .work h2, nav a, footer a { transition: all 180ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="fog" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+<div class="frame">
+
+  <header>
+    <span class="brand">LuKres</span>
+    <nav><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <div class="word">LuKres</div>
+    <p class="tag">Studio of one. <b>Luka Krestinin</b> — production systems,
+    quant research, and the occasional prize.</p>
+  </section>
+
+  <p class="cap">The atmosphere breathes and follows the cursor in the real build</p>
+
+  <section class="work">
+    <a href="#"><h2>Veto</h2><span class="meta">Co-founder · 2026 —</span></a>
+    <a href="#"><h2>Senthos</h2><span class="meta">1st place, Solana track · SCBC 2026</span></a>
+    <a href="#"><h2>Teza</h2><span class="meta">Quant intern · Summer 2026</span></a>
+  </section>
+
+  <footer>
+    <span>© 2026 LuKres</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
