@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 03C · Split</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600&f[]=satoshi@400,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #070706; --white: #f4f3ef; --grey: #8d8c88; --line: #1d1c1a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--black); color: var(--white);
+    font-family: "Satoshi", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+  .frame { max-width: 1600px; margin: 0 auto; padding: 0 clamp(20px, 3.5vw, 72px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 26px; font-size: 13px; letter-spacing: 0.06em; color: var(--grey);
+  }
+  header b { color: var(--white); font-weight: 500; }
+  nav { display: flex; gap: 30px; }
+  nav a:hover { color: var(--white); }
+
+  /* studio split — type column left, molten form right */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(24px, 4vw, 64px); align-items: center;
+    min-height: 78vh; padding-top: clamp(24px, 4vh, 48px);
+  }
+  .hero h1 {
+    font-family: "Clash Display", sans-serif; font-weight: 600;
+    font-size: clamp(2.6rem, 6.4vw, 6.2rem);
+    line-height: 1.02; letter-spacing: -0.025em;
+  }
+  .hero h1 .dim { color: var(--grey); }
+  .hero .sub {
+    margin-top: clamp(24px, 4vh, 44px); max-width: 44ch;
+    color: var(--grey); font-size: 16px; line-height: 1.7;
+  }
+  .hero .sub b { color: var(--white); font-weight: 500; }
+
+  /* molten form — warm metal, the page's only color */
+  .formwrap { position: relative; display: grid; place-items: center; }
+  .form {
+    width: min(34vw, 440px); aspect-ratio: 0.82;
+    border-radius: 48% 52% 55% 45% / 58% 44% 56% 42%;
+    background:
+      radial-gradient(55% 45% at 34% 26%, rgba(255,244,224,0.9), transparent 42%),
+      conic-gradient(from 230deg, #0c0a08 0%, #4a2f16 14%, #b4763a 30%,
+        #6e4520 46%, #2a1a0d 60%, #8a5a2a 76%, #0c0a08 100%);
+    filter: saturate(1.1);
+    box-shadow: 0 60px 160px -50px rgba(180, 118, 58, 0.4);
+  }
+  .form-cap {
+    position: absolute; bottom: -34px;
+    font-size: 12px; letter-spacing: 0.1em; color: var(--grey); text-transform: uppercase;
+  }
+
+  .work { margin-top: clamp(60px, 10vh, 120px); border-top: 1px solid var(--line); }
+  .work a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding: clamp(24px, 4vh, 42px) 0; border-bottom: 1px solid var(--line);
+  }
+  .work h2 {
+    font-family: "Clash Display", sans-serif; font-weight: 500;
+    font-size: clamp(1.8rem, 4.6vw, 3.6rem); letter-spacing: -0.02em;
+  }
+  .work .meta { color: var(--grey); font-size: 13.5px; text-align: right; line-height: 1.5; flex-shrink: 0; }
+  .work a:hover h2 { color: var(--grey); }
+
+  footer {
+    margin: clamp(60px, 10vh, 120px) 0 40px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;
+    font-size: 13px; color: var(--grey);
+  }
+  footer a:hover { color: var(--white); }
+
+  @media (max-width: 860px) {
+    nav { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 40px; }
+    .formwrap { order: -1; margin-top: 10px; }
+    .form { width: 62vw; }
+    .form-cap { position: static; margin-top: 46px; }
+    .work a { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .work .meta { text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .work h2, nav a, footer a { transition: all 180ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <span><b>LUKA KRESTININ</b> — CHICAGO</span>
+    <nav><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Luka Krestinin<br><span class="dim">builds things<br>that hold.</span></h1>
+      <p class="sub">Production systems, quant research, and the occasional prize.
+      <b>Veto</b> co-founder · <b>Teza</b> quant intern · CS + Math at <b>UChicago</b>.</p>
+    </div>
+    <div class="formwrap">
+      <div class="form" role="img" aria-label="Placeholder for the interactive form"></div>
+      <span class="form-cap">The form — molten metal, live in the real build</span>
+    </div>
+  </section>
+
+  <section class="work">
+    <a href="#"><h2>Veto</h2><span class="meta">Co-founder<br>2026 —</span></a>
+    <a href="#"><h2>Senthos</h2><span class="meta">1st place, Solana track · SCBC 2026<br>$15,000</span></a>
+    <a href="#"><h2>Teza</h2><span class="meta">Quant intern<br>Summer 2026</span></a>
+  </section>
+
+  <footer>
+    <span>© 2026 Luka Krestinin</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

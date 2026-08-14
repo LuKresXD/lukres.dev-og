@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Direction 03A · Light</title>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&f[]=satoshi@400,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ececea; --ink: #0b0b0c; --grey: #77777a; --line: #d5d5d2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "Satoshi", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .frame { max-width: 1600px; margin: 0 auto; padding: 0 clamp(20px, 3.5vw, 72px); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 26px; font-size: 13px; letter-spacing: 0.06em; color: var(--grey);
+  }
+  header b { color: var(--ink); font-weight: 500; }
+  nav { display: flex; gap: 30px; }
+  nav a:hover { color: var(--ink); }
+
+  .hero { position: relative; padding: clamp(48px, 10vh, 110px) 0 0; }
+  .hero h1 {
+    font-family: "Cabinet Grotesk", sans-serif; font-weight: 800;
+    font-size: clamp(3.4rem, 12.5vw, 12rem);
+    line-height: 0.88; letter-spacing: -0.035em; text-transform: uppercase;
+  }
+  .hero h1 span { display: block; }
+  .hero h1 .last { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+
+  /* dark chrome form on light ground — the only "color" is its sheen */
+  .form {
+    position: relative; margin: clamp(-30px, -4vw, -70px) auto 0;
+    width: min(46vw, 520px); aspect-ratio: 1; border-radius: 50%;
+    background:
+      radial-gradient(60% 54% at 33% 28%, rgba(255,255,255,0.85), transparent 40%),
+      radial-gradient(80% 80% at 62% 70%, rgba(120,140,165,0.35), transparent 55%),
+      conic-gradient(from 200deg, #101012 0%, #2b2e33 18%, #191a1d 34%,
+        #3d434c 52%, #121316 68%, #26292e 84%, #101012 100%);
+    box-shadow:
+      0 60px 120px -50px rgba(11,11,12,0.55),
+      inset 0 -30px 60px -20px rgba(11,11,12,0.5);
+  }
+  .form-cap {
+    text-align: center; margin-top: 18px;
+    font-size: 12px; letter-spacing: 0.1em; color: var(--grey); text-transform: uppercase;
+  }
+
+  .hero .sub {
+    margin: clamp(40px, 7vh, 80px) 0 0; max-width: 40ch;
+    color: var(--grey); font-size: 16px; line-height: 1.65;
+  }
+  .hero .sub b { color: var(--ink); font-weight: 500; }
+
+  .work { margin-top: clamp(80px, 15vh, 170px); border-top: 1px solid var(--line); }
+  .work a {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+    padding: clamp(24px, 4vh, 42px) 0; border-bottom: 1px solid var(--line);
+  }
+  .work h2 {
+    font-family: "Cabinet Grotesk", sans-serif; font-weight: 800;
+    font-size: clamp(1.8rem, 5vw, 4rem); letter-spacing: -0.02em; text-transform: uppercase;
+  }
+  .work .meta { color: var(--grey); font-size: 13.5px; text-align: right; line-height: 1.5; flex-shrink: 0; }
+  .work a:hover h2 { color: transparent; -webkit-text-stroke: 1px var(--ink); }
+
+  footer {
+    margin: clamp(80px, 15vh, 170px) 0 40px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;
+    font-size: 13px; color: var(--grey);
+  }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    nav { display: none; }
+    .form { width: 70vw; margin-top: -6vw; }
+    .work a { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .work .meta { text-align: left; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .work h2, nav a, footer a { transition: all 180ms ease-out; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <span><b>LUKA KRESTININ</b> — CHICAGO</span>
+    <nav><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1><span>Luka</span><span class="last">Krestinin</span></h1>
+    <div class="form" role="img" aria-label="Placeholder for the interactive form"></div>
+    <p class="form-cap">The form — dark chrome, live in the real build</p>
+    <p class="sub">Production systems, quant research, and the occasional prize.
+    <b>Veto</b> co-founder · <b>Teza</b> quant intern · CS + Math at <b>UChicago</b>.</p>
+  </section>
+
+  <section class="work">
+    <a href="#"><h2>Veto</h2><span class="meta">Co-founder<br>2026 —</span></a>
+    <a href="#"><h2>Senthos</h2><span class="meta">1st place, Solana track · SCBC 2026<br>$15,000</span></a>
+    <a href="#"><h2>Teza</h2><span class="meta">Quant intern<br>Summer 2026</span></a>
+  </section>
+
+  <footer>
+    <span>© 2026 Luka Krestinin</span>
+    <span><a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Email</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
