@@ -1,78 +1,10 @@
-// The set piece — the knot. An endless loop that tumbles on its own,
-// can be grabbed and thrown (real angular momentum, damped back to its
-// idle drift), and leans toward the cursor when at rest.
-// Material stays a dial while the finish gets decided: ?mat=name, the
-// pill button, or ArrowUp/Down.
+// The set piece — the knot, cut from crystal glass. An endless loop that
+// tumbles on its own, leans toward the cursor, spins up with cursor speed,
+// and can be grabbed and thrown (real angular momentum, damped back to
+// its idle drift). All chroma on the site lives in its dispersion.
 
 import * as THREE from 'three';
 import { RoomEnvironment } from '../vendor/room-environment.js';
-
-// procedural surface maps — no asset files, baked once at boot
-function bakeTexture(draw) {
-  const c = document.createElement('canvas');
-  c.width = c.height = 512;
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#808080';
-  ctx.fillRect(0, 0, 512, 512);
-  draw(ctx);
-  const tex = new THREE.CanvasTexture(c);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  return tex;
-}
-
-// long directional smears: brushed metal, smeared reflections
-const streaks = bakeTexture((ctx) => {
-  for (let i = 0; i < 1600; i++) {
-    const y = Math.random() * 512;
-    const w = 40 + Math.random() * 340;
-    const x = Math.random() * 512 - w / 2;
-    const v = Math.random() > 0.5 ? 255 : 0;
-    ctx.fillStyle = `rgba(${v},${v},${v},${0.09 + Math.random() * 0.14})`;
-    ctx.fillRect(x, y, w, 0.6 + Math.random() * 2.2);
-  }
-});
-
-// blotchy mineral grain: polished stone, hammered highlights
-const grain = bakeTexture((ctx) => {
-  for (let i = 0; i < 2400; i++) {
-    const r = 3 + Math.random() * 30;
-    const v = Math.random() > 0.5 ? 255 : 0;
-    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-    g.addColorStop(0, `rgba(${v},${v},${v},${0.07 + Math.random() * 0.12})`);
-    g.addColorStop(1, 'rgba(128,128,128,0)');
-    ctx.save();
-    ctx.translate(Math.random() * 512, Math.random() * 512);
-    ctx.fillStyle = g;
-    ctx.fillRect(-r, -r, r * 2, r * 2);
-    ctx.restore();
-  }
-});
-streaks.repeat.set(3, 1);
-grain.repeat.set(2, 2);
-
-const MATERIALS = [
-  { name: 'obsidian', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0x0b0b0d, metalness: 0.12, roughness: 0.3, roughnessMap: grain,
-      bumpMap: grain, bumpScale: 1.6, clearcoat: 1, clearcoatRoughness: 0.06,
-      envMapIntensity: 1.5 }) },
-  { name: 'glass', make: () => new THREE.MeshPhysicalMaterial({
-      transmission: 1, ior: 1.52, thickness: 0.85, dispersion: 0.45,
-      roughness: 0.02, metalness: 0, specularIntensity: 1,
-      clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 2.1 }) },
-  { name: 'chrome', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0xffffff, metalness: 1, roughness: 0.38, roughnessMap: streaks,
-      bumpMap: streaks, bumpScale: 1.1, envMapIntensity: 1.6 }) },
-  { name: 'soapglass', make: () => new THREE.MeshPhysicalMaterial({
-      transmission: 1, ior: 1.4, thickness: 0.4, dispersion: 0.18,
-      roughness: 0.08, metalness: 0, iridescence: 1, iridescenceIOR: 1.75,
-      envMapIntensity: 1.25 }) },
-  { name: 'oil', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0x101014, metalness: 0.3, roughness: 0.2, roughnessMap: streaks,
-      iridescence: 1, iridescenceIOR: 1.8, envMapIntensity: 1.3 }) },
-  { name: 'gold', make: () => new THREE.MeshPhysicalMaterial({
-      color: 0xd8a04e, metalness: 1, roughness: 0.28, roughnessMap: streaks,
-      bumpMap: streaks, bumpScale: 0.25, envMapIntensity: 1.35 }) },
-];
 
 export function initSetPiece(stage) {
   if (!stage) return null;
@@ -107,33 +39,14 @@ export function initSetPiece(stage) {
 
   const coarse = matchMedia('(pointer: coarse)').matches;
   const geo = new THREE.TorusKnotGeometry(0.62, 0.24, coarse ? 180 : 280, coarse ? 28 : 44);
-  const knot = new THREE.Mesh(geo, null);
+  const glass = new THREE.MeshPhysicalMaterial({
+    transmission: 1, ior: 1.52, thickness: 0.85, dispersion: 0.45,
+    roughness: 0.02, metalness: 0, specularIntensity: 1,
+    clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 2.1,
+  });
+  const knot = new THREE.Mesh(geo, glass);
   knot.scale.setScalar(0.62);
   scene.add(knot);
-
-  // material dial (temporary, until the finish is locked)
-  const ui = document.createElement('div');
-  ui.className = 'pick-ui';
-  const matBtn = document.createElement('button');
-  ui.appendChild(matBtn);
-  stage.appendChild(ui);
-
-  let mdx = Math.max(0, MATERIALS.findIndex((m) => m.name === new URLSearchParams(location.search).get('mat')));
-  let material = null;
-  function setMat(i) {
-    mdx = (i + MATERIALS.length) % MATERIALS.length;
-    const next = MATERIALS[mdx].make();
-    knot.material = next;
-    if (material) material.dispose();
-    material = next;
-    matBtn.textContent = `material · ${MATERIALS[mdx].name}`;
-  }
-  setMat(mdx);
-  matBtn.addEventListener('click', () => setMat(mdx + 1));
-  addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp') setMat(mdx + 1);
-    if (e.key === 'ArrowDown') setMat(mdx - 1);
-  });
 
   const dpr = Math.min(2, devicePixelRatio || 1);
   renderer.setPixelRatio(dpr);

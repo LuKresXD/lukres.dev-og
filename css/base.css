@@ -96,16 +96,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: absolute; left: -15%; top: -15%;
   width: 130%; height: 130%; max-width: none;
 }
-.stage .pick-ui {
-  position: absolute; left: 50%; bottom: -10%; transform: translateX(-50%);
-  display: flex; gap: 10px; white-space: nowrap;
-}
-.stage .pick-ui button {
-  font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--mid); border: 1px solid var(--line); border-radius: 999px;
-  padding: 8px 14px; transition: color var(--t-fast) var(--ease-settle);
-}
-.stage .pick-ui button:hover { color: var(--fg); }
 
 /* work */
 .work { margin-top: var(--space-5); border-top: 1px solid var(--line); }
