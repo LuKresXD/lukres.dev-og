@@ -33,18 +33,32 @@ function buildCount() {
     roll.style.whiteSpace = 'pre-line';
     col.appendChild(roll);
     el.appendChild(col);
-    return roll;
+    return { col, roll };
   });
   document.body.appendChild(el);
-  return { el, cols };
+
+  // digits aren't tabular: each column follows its current glyph's width
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
+  el.appendChild(probe);
+  const widths = {};
+  for (const d of '0123456789') {
+    probe.textContent = d;
+    widths[d] = probe.getBoundingClientRect().width;
+  }
+  probe.remove();
+  cols.forEach(({ col }) => { col.style.width = `${widths['0']}px`; });
+
+  return { el, cols, widths };
 }
 
-function setDigits(cols, n) {
+function setDigits(cols, widths, n) {
   String(n).padStart(3, '0').split('').forEach((d, i) => {
-    cols[i].style.transitionProperty = 'transform';
-    cols[i].style.transitionDuration = `${T.stepDur}ms`;
-    cols[i].style.transitionTimingFunction = EASE_INOUT;
-    cols[i].style.transform = `translateY(${-Number(d)}em)`;
+    const { col, roll } = cols[i];
+    roll.style.transition = `transform ${T.stepDur}ms ${EASE_INOUT}`;
+    roll.style.transform = `translateY(${-Number(d)}em)`;
+    col.style.transition = `width ${T.stepDur}ms ${EASE_INOUT}`;
+    col.style.width = `${widths[d]}px`;
   });
 }
 
@@ -81,22 +95,24 @@ export function runLoader(opts = lastOpts) {
   const stage = document.querySelector('[data-stage]');
   const visual = opts.visual || stage.querySelector('.mark-fallback');
 
-  const { el: countEl, cols } = buildCount();
+  const { el: countEl, cols, widths } = buildCount();
   const timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
 
   // count steps
-  T.stepAt.forEach((at, i) => later(() => setDigits(cols, T.steps[i]), at));
+  T.stepAt.forEach((at, i) => later(() => setDigits(cols, widths, T.steps[i]), at));
 
-  // the knot condenses out of the dark: heavy blur sharpening into focus
+  // the knot condenses out of the dark, sharpening into focus.
+  // soft blur only (no brightness: it lights up the canvas bounds), and the
+  // keyframes end at the natural state so no filter lingers afterward.
   visual.animate(
     [
-      { opacity: 0, transform: 'scale(0.72)', filter: 'blur(42px) brightness(2.2)' },
-      { opacity: 1, filter: 'blur(14px) brightness(1.35)', offset: 0.55 },
-      { opacity: 1, transform: 'scale(1.03)', filter: 'blur(0px) brightness(1)', offset: 0.85 },
-      { opacity: 1, transform: 'scale(1)' },
+      { opacity: 0, transform: 'scale(0.72)', filter: 'blur(12px)' },
+      { opacity: 1, filter: 'blur(7px)', offset: 0.55 },
+      { opacity: 1, transform: 'scale(1.03)', filter: 'blur(0px)', offset: 0.85 },
+      { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' },
     ],
-    { duration: T.congealDur + T.orbIn[1], delay: T.congealStart, easing: EASE_MAIN, fill: 'forwards' }
+    { duration: T.congealDur + T.orbIn[1], delay: T.congealStart, easing: EASE_MAIN, fill: 'backwards' }
   );
 
   // exit: count leaves, the site assembles around the circle

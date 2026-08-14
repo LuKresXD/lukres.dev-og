@@ -33,7 +33,7 @@
 
 /* reset */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 body {
   background: var(--bg); color: var(--fg);
   font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6;
