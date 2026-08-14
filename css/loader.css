@@ -1,29 +1,36 @@
-/* LuKres — loader: the count runs while the circle congeals, then the site
-   assembles around it. Overlay-free: loader bg IS the page bg. */
+/* LuKres — loader: scramble count (cropped, bottom-left), center bar fills,
+   cuts into a corner bracket, then the bracket zooms through the camera and
+   the page is revealed through it. */
 
-.count {
-  position: fixed; left: var(--gutter); bottom: 6vh; z-index: var(--z-overlay);
-  display: flex; height: 1em; overflow: clip;
-  font-family: var(--font-display); font-weight: 600;
-  font-size: var(--text-xl); line-height: 1; letter-spacing: 0.01em;
-  pointer-events: none;
+.load-overlay {
+  position: fixed; inset: 0; z-index: var(--z-overlay);
+  background: #000;
 }
-.count .col { display: block; height: 1em; overflow: clip; }
-.count .col span { display: block; line-height: 1; will-change: transform; }
 
-/* congeal blobs — molten fragments that fuse into the circle */
-.stage .blob {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  width: 58%; aspect-ratio: 1;
-  background: conic-gradient(from 210deg,
-    #0b0b0c 0%, #22344d 12%, #3f7d7a 26%, #b8896a 41%,
-    #6a4a7e 58%, #1e2a44 74%, #0b0b0c 100%);
-  filter: blur(46px) saturate(1.2);
-  opacity: 0;
+.load-count {
+  position: fixed; left: var(--gutter); bottom: 0; z-index: calc(var(--z-overlay) + 2);
+  transform: translateY(0.8em);
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(9rem, 34vh, 30rem); line-height: 1; letter-spacing: 0.01em;
+  color: #fff; pointer-events: none; opacity: 0;
+  font-variant-numeric: tabular-nums;
 }
-.stage .blob.b1 { left: 2%;  top: 6%; }
-.stage .blob.b2 { right: 0;  top: 14%; }
-.stage .blob.b3 { left: 22%; bottom: 0; }
+
+.load-bar {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  z-index: calc(var(--z-overlay) + 1);
+  width: clamp(120px, 9vw, 200px); height: clamp(24px, 3.4vh, 40px);
+  background: #2d2d2d; overflow: hidden; display: none;
+}
+.load-bar i {
+  position: absolute; inset: 0; background: #fff;
+  transform: scaleX(0); transform-origin: left center;
+}
+
+.load-piece {
+  position: fixed; left: 0; top: 0; z-index: calc(var(--z-overlay) + 1);
+  background: #fff; will-change: left, top, width, height;
+}
 
 /* initial hidden states — only while js-loading; no JS = site fully visible */
 .js-loading .site-head,
@@ -36,5 +43,5 @@
 .js-loading { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
-  .count, .stage .blob { display: none; }
+  .load-overlay, .load-count, .load-bar, .load-piece { display: none !important; }
 }
