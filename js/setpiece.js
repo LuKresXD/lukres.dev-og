@@ -101,51 +101,72 @@ export function initSetPiece(stage) {
   backdrop.position.z = -4;
   scene.add(backdrop);
 
-  const glass = new THREE.MeshPhysicalMaterial({
-    transmission: 1,
-    ior: 1.48,
-    thickness: 0.55,
-    dispersion: 0.28,
-    roughness: 0.06,
-    metalness: 0,
-    clearcoat: 1,
-    clearcoatRoughness: 0.06,
-    envMapIntensity: 1.35,
-  });
+  const MATERIALS = [
+    { name: 'glass', make: () => new THREE.MeshPhysicalMaterial({
+        transmission: 1, ior: 1.48, thickness: 0.55, dispersion: 0.28,
+        roughness: 0.06, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.06,
+        envMapIntensity: 1.35 }) },
+    { name: 'chrome', make: () => new THREE.MeshPhysicalMaterial({
+        color: 0xffffff, metalness: 1, roughness: 0.05, envMapIntensity: 1.6 }) },
+    { name: 'soap', make: () => new THREE.MeshPhysicalMaterial({
+        color: 0x101014, metalness: 0.25, roughness: 0.16,
+        iridescence: 1, iridescenceIOR: 1.8, envMapIntensity: 1.3 }) },
+    { name: 'gold', make: () => new THREE.MeshPhysicalMaterial({
+        color: 0xd8a04e, metalness: 1, roughness: 0.2, envMapIntensity: 1.35 }) },
+    { name: 'ceramic', make: () => new THREE.MeshPhysicalMaterial({
+        color: 0xf5f5f3, metalness: 0, roughness: 0.5, clearcoat: 0.45,
+        clearcoatRoughness: 0.3, envMapIntensity: 0.9 }) },
+    { name: 'obsidian', make: () => new THREE.MeshPhysicalMaterial({
+        color: 0x0b0b0d, metalness: 0.1, roughness: 0.07, clearcoat: 1,
+        clearcoatRoughness: 0.05, envMapIntensity: 1.5 }) },
+  ];
 
-  // pick phase: cycling label
-  const label = document.createElement('span');
-  label.className = 'form-label';
-  stage.appendChild(label);
-  let labelTimer = 0;
-  function showLabel(text) {
-    label.textContent = text;
-    label.classList.add('on');
-    clearTimeout(labelTimer);
-    labelTimer = setTimeout(() => label.classList.remove('on'), 1400);
-  }
+  // pick phase: two tiny cyclers under the stage
+  const ui = document.createElement('div');
+  ui.className = 'pick-ui';
+  const formBtn = document.createElement('button');
+  const matBtn = document.createElement('button');
+  ui.append(formBtn, matBtn);
+  stage.appendChild(ui);
 
+  const params = new URLSearchParams(location.search);
+  let idx = Math.max(0, FORMS.findIndex((f) => f.name === params.get('form')));
+  let mdx = Math.max(0, MATERIALS.findIndex((m) => m.name === params.get('mat')));
+  let material = null;
   let piece = null;
-  let idx = Math.max(0, FORMS.findIndex((f) => f.name === new URLSearchParams(location.search).get('form')));
+
+  function setMat(i) {
+    mdx = (i + MATERIALS.length) % MATERIALS.length;
+    const next = MATERIALS[mdx].make();
+    if (piece) piece.traverse((o) => { if (o.isMesh) o.material = next; });
+    if (material) material.dispose();
+    material = next;
+    matBtn.textContent = `material · ${MATERIALS[mdx].name}`;
+  }
   function setForm(i) {
     idx = (i + FORMS.length) % FORMS.length;
     if (piece) {
       scene.remove(piece);
       piece.traverse((o) => o.geometry && o.geometry.dispose());
     }
-    piece = FORMS[idx].build(glass);
+    piece = FORMS[idx].build(material);
     piece.scale.setScalar(FORMS[idx].scale);
     scene.add(piece);
-    showLabel(`${idx + 1}/${FORMS.length} · ${FORMS[idx].name}`);
+    formBtn.textContent = `form · ${FORMS[idx].name}`;
   }
+  setMat(mdx);
   setForm(idx);
 
   addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') setForm(idx + 1);
     if (e.key === 'ArrowLeft') setForm(idx - 1);
+    if (e.key === 'ArrowUp') setMat(mdx + 1);
+    if (e.key === 'ArrowDown') setMat(mdx - 1);
   });
   canvas.style.pointerEvents = 'auto';
   canvas.addEventListener('click', () => setForm(idx + 1));
+  formBtn.addEventListener('click', () => setForm(idx + 1));
+  matBtn.addEventListener('click', () => setMat(mdx + 1));
 
   const dpr = Math.min(2, devicePixelRatio || 1);
   renderer.setPixelRatio(dpr);
