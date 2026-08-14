@@ -1,5 +1,7 @@
-/* LuKres — loader: the count runs while the circle congeals, then the site
-   assembles around it. Overlay-free: loader bg IS the page bg. */
+/* LuKres — loader: the wordmark letters rise out of their masks while the
+   count steps; the knot's stage sweeps open from the center; the halves of
+   the name breathe apart; the rest of the site rises in.
+   Overlay-free: loader bg IS the page bg. */
 
 .count {
   position: fixed; left: var(--gutter); bottom: 6vh; z-index: var(--z-overlay);
@@ -11,30 +13,23 @@
 .count .col { display: block; height: 1em; overflow: clip; }
 .count .col span { display: block; line-height: 1; will-change: transform; }
 
-/* congeal blobs — molten fragments that fuse into the circle */
-.stage .blob {
-  position: absolute; border-radius: 50%; pointer-events: none;
-  width: 58%; aspect-ratio: 1;
-  background: conic-gradient(from 210deg,
-    #0b0b0c 0%, #22344d 12%, #3f7d7a 26%, #b8896a 41%,
-    #6a4a7e 58%, #1e2a44 74%, #0b0b0c 100%);
-  filter: blur(46px) saturate(1.2);
-  opacity: 0;
-}
-.stage .blob.b1 { left: 2%;  top: 6%; }
-.stage .blob.b2 { right: 0;  top: 14%; }
-.stage .blob.b3 { left: 22%; bottom: 0; }
+/* wordmark letter masks */
+.wordmark .l { display: inline-block; overflow: clip; vertical-align: bottom; }
+.wordmark .l > span { display: inline-block; will-change: transform; }
+.wordmark .wm-start, .wordmark .wm-end { display: inline-block; will-change: transform; }
 
 /* initial hidden states — only while js-loading; no JS = site fully visible */
 .js-loading .site-head,
-.js-loading .wordmark,
-.js-loading .stage .mark-fallback,
-.js-loading .stage .stage-canvas,
+.js-loading .stage,
 .js-loading .tagline,
 .js-loading .work,
 .js-loading .site-foot { opacity: 0; }
+.js-loading .wordmark .l > span { transform: translateY(110%); }
 .js-loading { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
-  .count, .stage .blob { display: none; }
+  .count { display: none; }
+  .js-loading .site-head, .js-loading .stage, .js-loading .tagline,
+  .js-loading .work, .js-loading .site-foot { opacity: 1; }
+  .js-loading .wordmark .l > span { transform: none; }
 }
