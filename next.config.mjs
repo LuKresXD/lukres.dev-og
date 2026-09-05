@@ -10,6 +10,8 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()' },
   { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  // Archived copy (og.lukres.dev) - keep it out of search results; lukres.dev is the live site.
+  { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
 ];
 
 const nextConfig = {

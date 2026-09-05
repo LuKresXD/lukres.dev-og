@@ -174,7 +174,7 @@ export default function Projects() {
 
               {/* 8. Microfluidics reactor */}
               <ProjectCard
-                url="https://lukres.dev/cas"
+                url="https://lukres.dev/projects/microfluidics"
                 title="Microfluidics reactor"
                 fullDescription={[
                   "This CAS project centers around the development of a microfluidics droplet-based reactor, a sophisticated device designed for chemical and biological reactions at a microscopic scale. The project involved creating a precise peristaltic pump system and custom silica chips to enable the formation of liposomes, small artificial vesicles used in drug delivery and other biological research. The reactor offers immense potential in research fields, especially where precision and scalability are key. Despite facing material constraints, the project successfully overcame obstacles, producing a functional and innovative system."
