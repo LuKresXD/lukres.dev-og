@@ -1,3 +1,11 @@
+> [!NOTE]
+> **This is lukres.dev v1 — the original.** Built with Next.js + Tailwind, this was my
+> personal site from 2024 to 2026, and it's still live at **[og.lukres.dev](https://og.lukres.dev)**.
+> The current **[lukres.dev](https://lukres.dev)** is a separate, ground-up rebuild kept in a
+> private repo — this one is **not** its source.
+
+---
+
 # Luka's Portfolio 📁
 
 ## Description
